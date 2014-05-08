@@ -8,7 +8,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		System.out.println("42ES04C MP3-PLAYER");
 		System.out.println("WORLDS FINEST AND MOST ADVANCED PIECE OF JUNK");
-		System.out.println("TESTING");
+		System.out.println("TEST");
 		sleep(1000);
 		System.out.println("1");
 		sleep(1000);
