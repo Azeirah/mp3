@@ -9,7 +9,7 @@ public class Main {
 		System.out.println("**STARTING UP**");
 		initialize();
 		io.sleep(1000);
-		console.printPrompt("hallo");
+		console.printPrompt(console.inString("What is your name?"));
 	}
 
 	public static void initialize() {// Initialize all classes and objects
