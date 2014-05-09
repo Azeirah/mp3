@@ -1,23 +1,23 @@
-
 public class Main {
-	//Declare Classes
+	// Declare Classes
 	static LCD lcd;
 	static Decoder decoder;
 	static IO io;
-	
-	public static void main(String[] args) {//The main function, the very start
-		System.out.println("42ES04C MP3-PLAYER");
+	static ConsoleInput console;
+
+	public static void main(String[] args) {// The main function, the very start
+		System.out.println("**STARTING UP**");
 		initialize();
 		io.sleep(1000);
-		System.out.println("Yeah, dat werkt");
+		console.printPrompt("hallo");
 	}
-	
-	public static void initialize(){//Initialize all classes and objects
+
+	public static void initialize() {// Initialize all classes and objects
+		System.out.print("Initializing...");
 		lcd = new LCD();
 		decoder = new Decoder();
 		io = new IO();
+		console = new ConsoleInput();
+		System.out.println("       Done!");
 	}
-	
-
-
 }
