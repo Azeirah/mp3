@@ -1,54 +1,23 @@
 
 public class Main {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	//Declare Classes
+	static LCD lcd;
+	static Decoder decoder;
+	static IO io;
+	
+	public static void main(String[] args) {//The main function, the very start
 		System.out.println("42ES04C MP3-PLAYER");
-		System.out.println("WORLDS FINEST AND MOST ADVANCED PIECE OF JUNK");
-		System.out.println("TEST");
-		sleep(1000);
-		System.out.println("1");
-		sleep(1000);
-		System.out.println("2");
-		sleep(1000);
-		System.out.println("3");
-		sleep(1000);
-		System.out.println("4");
-		sleep(1000);
-		System.out.println("5");
-		sleep(1000);
-		System.out.println("6");
-		sleep(1000);
-		System.out.println("7");
-		sleep(1000);
-		System.out.println("8");
-		sleep(1000);
-		System.out.println("9");
-		sleep(1000);
-		System.out.println("10");
-		sleep(1000);
-		System.out.println("11");
-		sleep(1000);
-		System.out.println("12");
-		sleep(1000);
-		System.out.println("13");
-		sleep(1000);
-		System.out.println("15");
-		sleep(1000);
-		System.out.println("END OF TEST");
+		initialize();
+		io.sleep(1000);
+		System.out.println("Yeah, dat werkt");
 	}
 	
-	public static void sleep(int a){
-		try{
-			Thread.sleep(a);
-		}catch(InterruptedException ex){
-			Thread.currentThread().interrupt();
-			
-		}
-		
+	public static void initialize(){//Initialize all classes and objects
+		lcd = new LCD();
+		decoder = new Decoder();
+		io = new IO();
 	}
+	
+
 
 }
