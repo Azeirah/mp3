@@ -1,5 +1,5 @@
 public class Main {
-	// Declare Classes
+	//Declare Classes
 	static LCD lcd;
 	static Decoder decoder;
 	static IO io;

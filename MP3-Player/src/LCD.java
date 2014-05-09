@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
+//Now we just need a way to actually write them via the IO class.
 public class LCD {
 	private int width;
 	private int height;
