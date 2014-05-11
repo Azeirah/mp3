@@ -1,110 +1,125 @@
-public class Console{
-//**********************************************************
-//**********************************************************
-//Program: Keyin
-//Reference: Session 20
-//Topics:
-// 1. Using the read() method of the ImputStream class
-//    in the java.io package
-// 2. Developing a class for performing basic console
-//    input of character and numeric types
-//**********************************************************
-//**********************************************************
+public class Console {
+	public boolean debug = false;
 
-//Method to display the user's prompt string
-  public void printPrompt(String prompt) {
-    System.out.print(prompt + " ");
-    System.out.flush();
-  }
+	// Method to display the user's prompt string
+	public void printPrompt(String prompt) {
+		System.out.print(prompt + " ");
+		System.out.flush();
+	}
 
-  //Method to make sure no data is available in the
-  //input stream
-  public void inputFlush() {
-    int dummy;
-    int bAvail;
+	public void clear() {
+		try {
+			final String os = System.getProperty("os.name");
 
-    try {
-      while ((System.in.available()) != 0)
-        dummy = System.in.read();
-    } catch (java.io.IOException e) {
-      System.out.println("Input error");
-    }
-  }
+			if (os.contains("Windows")) {
+				Runtime.getRuntime().exec("cls");
+			} else {
+				Runtime.getRuntime().exec("clear");
+			}
+		} catch (final Exception e) {
+			printDebug("Unable to clear the terminal...");
+		}
 
-  //********************************
-  //  data input methods for
-  //string, int, char, and double
-  //********************************
-  public String inString(String prompt) {
-    inputFlush();
-    printPrompt(prompt);
-    return inString();
-  }
+	}
 
-  public String inString() {
-    int aChar;
-    String s = "";
-    boolean finished = false;
+	public void printDebug(String prompt) {
+		if (debug) {
+			System.out.print(prompt);
+			System.out.flush();
+		}
+	}
 
-    while (!finished) {
-      try {
-        aChar = System.in.read();
-        if (aChar < 0 || (char) aChar == '\n')
-          finished = true;
-        else if ((char) aChar != '\r')
-          s = s + (char) aChar; // Enter into string
-      }
+	// Method to make sure no data is available in the
+	// input stream
+	public void inputFlush() {
+		@SuppressWarnings("unused")
+		int dummy;
+		@SuppressWarnings("unused")
+		int bAvail;
 
-      catch (java.io.IOException e) {
-        System.out.println("Input error");
-        finished = true;
-      }
-    }
-    return s;
-  }
+		try {
+			while ((System.in.available()) != 0)
+				dummy = System.in.read();
+		} catch (java.io.IOException e) {
+			System.out.println("Input error");
+		}
+	}
 
-  public int inInt(String prompt) {
-    while (true) {
-      inputFlush();
-      printPrompt(prompt);
-      try {
-        return Integer.valueOf(inString().trim()).intValue();
-      }
+	// ********************************
+	// data input methods for
+	// string, int, char, and double
+	// ********************************
+	public String inString(String prompt) {
+		inputFlush();
+		printPrompt(prompt);
+		return inString();
+	}
 
-      catch (NumberFormatException e) {
-        System.out.println("Invalid input. Not an integer");
-      }
-    }
-  }
+	public String inString() {
+		int aChar;
+		String s = "";
+		boolean finished = false;
 
-  public  char inChar(String prompt) {
-    int aChar = 0;
+		while (!finished) {
+			try {
+				aChar = System.in.read();
+				if (aChar < 0 || (char) aChar == '\n')
+					finished = true;
+				else if ((char) aChar != '\r')
+					s = s + (char) aChar; // Enter into string
+			}
 
-    inputFlush();
-    printPrompt(prompt);
+			catch (java.io.IOException e) {
+				System.out.println("Input error");
+				finished = true;
+			}
+		}
+		return s;
+	}
 
-    try {
-      aChar = System.in.read();
-    }
+	public int inInt(String prompt) {
+		while (true) {
+			inputFlush();
+			printPrompt(prompt);
+			try {
+				return Integer.valueOf(inString().trim()).intValue();
+			}
 
-    catch (java.io.IOException e) {
-      System.out.println("Input error");
-    }
-    inputFlush();
-    return (char) aChar;
-  }
+			catch (NumberFormatException e) {
+				System.out.println("Invalid input. Not an integer");
+			}
+		}
+	}
 
-  public double inDouble(String prompt) {
-    while (true) {
-      inputFlush();
-      printPrompt(prompt);
-      try {
-        return Double.valueOf(inString().trim()).doubleValue();
-      }
+	public char inChar(String prompt) {
+		int aChar = 0;
 
-      catch (NumberFormatException e) {
-        System.out.println("Invalid input. Not a floating point number");
-      }
-    }
-  }
+		inputFlush();
+		printPrompt(prompt);
+
+		try {
+			aChar = System.in.read();
+		}
+
+		catch (java.io.IOException e) {
+			System.out.println("Input error");
+		}
+		inputFlush();
+		return (char) aChar;
+	}
+
+	public double inDouble(String prompt) {
+		while (true) {
+			inputFlush();
+			printPrompt(prompt);
+			try {
+				return Double.valueOf(inString().trim()).doubleValue();
+			}
+
+			catch (NumberFormatException e) {
+				System.out
+						.println("Invalid input. Not a floating point number");
+			}
+		}
+	}
 }

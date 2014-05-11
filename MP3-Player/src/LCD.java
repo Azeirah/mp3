@@ -1,15 +1,25 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
 //Now we just need a way to actually write them via the IO class.
 public class LCD {
-	private int width;
-	private int height;
-	int[][] _intro;
-	public void init() throws IOException{
-		_intro = loadBMPImage("/MP3-Player/Res/Images/Intro.bmp");
+	public int width;
+	public int height;
+	public int[][] _intro;
+
+	public void init() throws IOException {
+		width = 240;
+		height = 64;
+		_intro = importImage(Main.rootPath + "\\res\\images\\Intro.bmp");
+	}
+	
+	public int[][] importImage(String _path) throws IOException{
+		File _file = new File(_path);
+		 return loadBMPImage(_file);
 	}
 
 	public void ledsOn() {
@@ -43,12 +53,16 @@ public class LCD {
 
 	public void intro(int[][] _array) {
 		ledsOff();
-		for (short x = 0; x < width; x++) {// LCD.intro.length
-			for (short y = 0; y < height; y++) {// LCD.intro[x].length
-				if (_array[y][x] == 1) {// LCD.intro[x][y] == 1
+		for (short x = 0; x < height; x++) {
+			for (short y = 0; y < width; y++) {
+				if (_array[x][y] == 1) {
 					setPixel(x, y);
+					Main.console.printDebug("█");
+				} else {
+					Main.console.printDebug(" ");
 				}
 			}
+			System.out.println("");
 		}
 	}
 
@@ -61,8 +75,10 @@ public class LCD {
 		}
 	}
 
-	public int[][] loadBMPImage(String BMPFileName) throws IOException {
-		BufferedImage image = ImageIO.read(getClass().getResource(BMPFileName));
+	public int[][] loadBMPImage(File BMPFileName) throws IOException {
+		// BufferedImage image =
+		// ImageIO.read(getClass().getResource(BMPFileName));
+		BufferedImage image = ImageIO.read(BMPFileName);
 		int[][] _array2D = new int[image.getHeight()][image.getWidth()];
 
 		for (int yPixel = 0; yPixel < image.getHeight(); yPixel++) {
