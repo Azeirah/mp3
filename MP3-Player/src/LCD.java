@@ -7,9 +7,9 @@ import javax.imageio.ImageIO;
 public class LCD {
 	private int width;
 	private int height;
-
-	public void init() throws IOException {
-
+	int[][] _intro;
+	public void init() throws IOException{
+		_intro = loadBMPImage("/MP3-Player/Res/Images/Intro.bmp");
 	}
 
 	public void ledsOn() {
