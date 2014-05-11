@@ -26,7 +26,7 @@ public class LCD {
 
 	}
 
-	public void ledsOff() {
+	public void clear() {
 
 	}
 
@@ -34,7 +34,7 @@ public class LCD {
 		for (int i = 0; i < _n; i++) {
 			ledsOn();
 			Main.io.sleep(_t);
-			ledsOff();
+			clear();
 			Main.io.sleep(_t);
 		}
 
@@ -52,7 +52,7 @@ public class LCD {
 	}
 
 	public void intro(int[][] _array) {
-		ledsOff();
+		clear();
 		for (short x = 0; x < height; x++) {
 			for (short y = 0; y < width; y++) {
 				if (_array[x][y] == 1) {
