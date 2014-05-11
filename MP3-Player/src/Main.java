@@ -1,23 +1,49 @@
+import java.io.IOException;
+
 public class Main {
-	//Declare Classes
+	// Declare Classes
 	static LCD lcd;
 	static Decoder decoder;
 	static IO io;
-	static ConsoleInput console;
+	static Console console;
+	static String rootPath;
+	static Menu menu;
+	static Player player;
+	static boolean debug = true;
 
-	public static void main(String[] args) {// The main function, the very start
+	public static void main(String[] args) throws IOException {
 		System.out.println("**STARTING UP**");
 		initialize();
 		io.sleep(1000);
-		console.printPrompt(console.inString("What is your name?"));
+		lcd.intro(lcd._intro);// Draws introduction
+		lcd.ledsOf();
+		player.setTrackNumber(1);
+		player.playTrackNumber(1);// Player plays first track
 	}
 
-	public static void initialize() {// Initialize all classes and objects
-		System.out.print("Initializing...");
+	public static void initialize() throws IOException {// Initialize all
+														// classes and objects
+		System.out.println("  Initializing...");
+		rootPath = System.getProperty("user.dir");
+		System.out.println("    Working directory: " + rootPath);
 		lcd = new LCD();
+		lcd.init();
+		System.out.println("    LCD created...");
 		decoder = new Decoder();
+		System.out.println("    Decoder created...");
 		io = new IO();
-		console = new ConsoleInput();
-		System.out.println("       Done!");
+		if (debug) {
+			io.init();
+			io.ioinit(); // Initialize GPIO lines
+		}
+		System.out.println("    IO created...");
+		console = new Console();
+		console.debug = false;
+		System.out.println("    Console created...");
+		menu = new Menu();
+		System.out.println("    Menu created...");
+		player = new Player();
+		System.out.println("    Player created...");
+		System.out.println("  Done!");
 	}
 }

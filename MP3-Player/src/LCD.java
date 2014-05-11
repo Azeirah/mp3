@@ -1,37 +1,45 @@
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 //Now we just need a way to actually write them via the IO class.
-public class LCD {
-	private int width;
-	private int height;
-
-	public void init() throws IOException {
-
+public class LCD extends ScreenElement {
+    public LCD() {
+        super(0, 0);
+        width = 240;
+		height = 64;
 	}
 
+	public void displayOn(){
+		Main.io.writeLCD(0,1,0,10101111);
+	}
+	
+	public void displayOff(){
+		Main.io.writeLCD(0,1,0,10101110);
+	}
+	
 	public void ledsOn() {
-
+		Main.io.writeLCD(0,1,0,10100101);
 	}
 
-	public void ledsOff() {
-
+	public void ledsOf() {
+		Main.io.writeLCD(0,1,0,10100100);
 	}
 
+	public void reset(){
+		Main.io.writeLCD(0,1,0,11100010);
+	}
+	
+	public void dataWrite(byte _data){
+		Main.io.writeLCD(1,1,0,_data);
+	}
+//	public byte dataRead(){
+//		Main.io.writeLCD(1,0,1,0);
+//		return 0;
+//	}
 	public void flash(int _n, int _t) {
 		for (int i = 0; i < _n; i++) {
 			ledsOn();
 			Main.io.sleep(_t);
-			ledsOff();
+			ledsOf();
 			Main.io.sleep(_t);
 		}
-
-	}
-
-	public void setPixel(int x, int y) {
-
 	}
 
 	public void drawSinus() {
@@ -41,16 +49,20 @@ public class LCD {
 		}
 	}
 
-	public void intro(int[][] _array) {
-		ledsOff();
-		for (short x = 0; x < width; x++) {// LCD.intro.length
-			for (short y = 0; y < height; y++) {// LCD.intro[x].length
-				if (_array[y][x] == 1) {// LCD.intro[x][y] == 1
-					setPixel(x, y);
-				}
-			}
-		}
-	}
+//	public void intro(int[][] _array) {
+//		ledsOf();
+//		for (short x = 0; x < height; x++) {
+//			for (short y = 0; y < width; y++) {
+//				if (_array[x][y] == 1) {
+//					setPixel(x, y);
+//					Main.console.printDebug("█");
+//				} else {
+//					Main.console.printDebug(" ");
+//				}
+//			}
+//			System.out.println("");
+//		}
+//	}
 
 	public void print(int[][] _array2D) {
 		for (int x = 0; x < _array2D.length; x++) {
@@ -59,36 +71,5 @@ public class LCD {
 			}
 			System.out.println();
 		}
-	}
-
-	public int[][] loadBMPImage(String BMPFileName) throws IOException {
-		BufferedImage image = ImageIO.read(getClass().getResource(BMPFileName));
-		int[][] _array2D = new int[image.getHeight()][image.getWidth()];
-
-		for (int yPixel = 0; yPixel < image.getHeight(); yPixel++) {
-			for (int xPixel = 0; xPixel < image.getWidth(); xPixel++) {
-				int color = image.getRGB(xPixel, yPixel);
-				if (color == Color.BLACK.getRGB()) {
-					_array2D[yPixel][xPixel] = 1;
-				} else {
-					_array2D[yPixel][xPixel] = 0; // ?
-				}
-			}
-		}
-		return _array2D;
-	}
-
-	public int[][] invert(int[][] array2D) {
-		for (int x = 0; x < array2D.length; x++) {
-			for (int y = 0; y < array2D[x].length; y++) {
-				int cell = array2D[x][y];
-				if (cell == 1) {
-					array2D[x][y] = 0;
-				} else if (cell == 0) {
-					array2D[x][y] = 1;
-				}
-			}
-		}
-		return array2D;
 	}
 }
