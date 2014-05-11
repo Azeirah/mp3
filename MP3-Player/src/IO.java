@@ -1,9 +1,11 @@
+import java.io.IOException;
+
 public class IO {
 	public native int ioinit();
 	public native int iowrite(int a, int v);
 	public native int ioread(int a);
 
-	static {
+	void init() throws IOException{
 		System.loadLibrary("gpio");
 	}
 
@@ -17,6 +19,10 @@ public class IO {
 
 	}
 
+	public void writeLCD(int _A0, int _RD, int _WR, int l){
+		
+	}
+	
 	public void writePin(int _N,boolean _val){
 		if(_val){
 			iowrite(_N,1);

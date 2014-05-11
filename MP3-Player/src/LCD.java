@@ -22,19 +22,38 @@ public class LCD {
 		 return loadBMPImage(_file);
 	}
 
+	public void displayOn(){
+		Main.io.writeLCD(0,1,0,10101111);
+	}
+	
+	public void displayOff(){
+		Main.io.writeLCD(0,1,0,10101110);
+	}
+	
 	public void ledsOn() {
-
+		Main.io.writeLCD(0,1,0,10100101);
 	}
 
-	public void clear() {
-
+	public void ledsOf() {
+		Main.io.writeLCD(0,1,0,10100100);
 	}
 
+	public void reset(){
+		Main.io.writeLCD(0,1,0,11100010);
+	}
+	
+	public void dataWrite(byte _data){
+		Main.io.writeLCD(1,1,0,_data);
+	}
+//	public byte dataRead(){
+//		Main.io.writeLCD(1,0,1,0);
+//		return 0;
+//	}
 	public void flash(int _n, int _t) {
 		for (int i = 0; i < _n; i++) {
 			ledsOn();
 			Main.io.sleep(_t);
-			clear();
+			ledsOf();
 			Main.io.sleep(_t);
 		}
 
@@ -52,7 +71,7 @@ public class LCD {
 	}
 
 	public void intro(int[][] _array) {
-		clear();
+		ledsOf();
 		for (short x = 0; x < height; x++) {
 			for (short y = 0; y < width; y++) {
 				if (_array[x][y] == 1) {
