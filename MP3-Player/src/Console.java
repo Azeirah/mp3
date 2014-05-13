@@ -1,5 +1,5 @@
 public class Console {
-	public boolean debug = false;
+	public boolean debug ;
 
 	// Method to display the user's prompt string
 	public void printPrompt(String prompt) {

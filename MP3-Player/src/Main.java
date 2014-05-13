@@ -15,8 +15,8 @@ public class Main {
 		System.out.println("**STARTING UP**");
 		initialize();
 		io.sleep(1000);
-		lcd.intro(lcd._intro);// Draws introduction
-		lcd.ledsOf();
+		lcd.drawScreenElements();
+		lcd.ledsOff();
 		player.setTrackNumber(1);
 		player.playTrackNumber(1);// Player plays first track
 	}
@@ -27,18 +27,20 @@ public class Main {
 		rootPath = System.getProperty("user.dir");
 		System.out.println("    Working directory: " + rootPath);
 		lcd = new LCD();
-		lcd.init();
+		ScreenElement _intro = new ScreenElement(0,0,Main.rootPath + "\\res\\images\\Intro.bmp");
+		lcd.addScreenElement(_intro);
+		//lcd.init();
 		System.out.println("    LCD created...");
 		decoder = new Decoder();
 		System.out.println("    Decoder created...");
 		io = new IO();
-		if (debug) {
+		if (!debug) {
 			io.init();
 			io.ioinit(); // Initialize GPIO lines
 		}
 		System.out.println("    IO created...");
 		console = new Console();
-		console.debug = false;
+		console.debug = true;
 		System.out.println("    Console created...");
 		menu = new Menu();
 		System.out.println("    Menu created...");

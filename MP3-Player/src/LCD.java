@@ -1,11 +1,19 @@
+import java.io.IOException;
+
 //Now we just need a way to actually write them via the IO class.
 public class LCD extends ScreenElement {
-    public LCD() {
+    /**
+     * @throws IOException 
+	 * 
+	 */
+	public LCD() throws IOException {
         super(0, 0);
         width = 240;
 		height = 64;
 	}
+	
 
+	
 	public void displayOn(){
 		Main.io.writeLCD(0,1,0,10101111);
 	}
@@ -18,7 +26,7 @@ public class LCD extends ScreenElement {
 		Main.io.writeLCD(0,1,0,10100101);
 	}
 
-	public void ledsOf() {
+	public void ledsOff() {
 		Main.io.writeLCD(0,1,0,10100100);
 	}
 
@@ -37,7 +45,7 @@ public class LCD extends ScreenElement {
 		for (int i = 0; i < _n; i++) {
 			ledsOn();
 			Main.io.sleep(_t);
-			ledsOf();
+			ledsOff();
 			Main.io.sleep(_t);
 		}
 	}
@@ -49,20 +57,20 @@ public class LCD extends ScreenElement {
 		}
 	}
 
-//	public void intro(int[][] _array) {
-//		ledsOf();
-//		for (short x = 0; x < height; x++) {
-//			for (short y = 0; y < width; y++) {
-//				if (_array[x][y] == 1) {
-//					setPixel(x, y);
-//					Main.console.printDebug("█");
-//				} else {
-//					Main.console.printDebug(" ");
-//				}
-//			}
-//			System.out.println("");
-//		}
-//	}
+	public void draw(ScreenElement _element) {
+		ledsOff();
+		for (short x = 0; x < height; x++) {
+			for (short y = 0; y < width; y++) {
+				if (_element.getDotArray()[x][y]) {
+					setPixel(x, y);
+					Main.console.printDebug("█");
+				} else {
+					Main.console.printDebug(" ");
+				}
+			}
+			System.out.println("");
+		}
+	}
 
 	public void print(int[][] _array2D) {
 		for (int x = 0; x < _array2D.length; x++) {
