@@ -19,7 +19,23 @@ public class IO {
 
 	}
 
-	public void writeLCD(int _A0, int _RD, int _WR, int l){
+	public void writeBufferedLCD(int _A0, byte _l){
+		writeLCD(_A0,_l);
+	}
+	
+	public void writeBufferedLCD(int _A0, int _l){
+		byte _L = (byte) _l;
+		writeBufferedLCD(_A0,_L);
+	}
+	
+	public void writeLCD(int _A0, int _l){
+		byte _L = (byte)_l;
+		writeLCD(_A0,_L);
+	}
+	
+	public void writeLCD(int _A0, byte _l){
+		writePin(Main.lcd.getA0(),_A0);
+		writePin(Main.lcd.getA0(),_A0);
 		
 	}
 	
@@ -44,7 +60,7 @@ public class IO {
 	}
 	
 	public void deInit() {
-		deInit(); // Deinitialize GPIO lines
+		deInit(); // Reinitialize GPIO lines
 	}
 }
 

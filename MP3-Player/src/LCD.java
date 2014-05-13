@@ -1,46 +1,40 @@
 import java.io.IOException;
 
-//Now we just need a way to actually write them via the IO class.
 public class LCD extends ScreenElement {
-    /**
-     * @throws IOException 
-	 * 
-	 */
+	private int MOSI = 57;
+	private int SCL = 58;
+	private int A0 = 59;
+	
 	public LCD() throws IOException {
         super(0, 0);
         width = 240;
-		height = 64;
+		height = 64;		
 	}
 	
-
-	
 	public void displayOn(){
-		Main.io.writeLCD(0,1,0,10101111);
+		Main.io.writeBufferedLCD(0,10101111);
 	}
 	
 	public void displayOff(){
-		Main.io.writeLCD(0,1,0,10101110);
+		Main.io.writeBufferedLCD(0,10101110);
 	}
 	
 	public void ledsOn() {
-		Main.io.writeLCD(0,1,0,10100101);
+		Main.io.writeBufferedLCD(0,10100101);
 	}
 
 	public void ledsOff() {
-		Main.io.writeLCD(0,1,0,10100100);
+		Main.io.writeBufferedLCD(0,10100100);
 	}
 
 	public void reset(){
-		Main.io.writeLCD(0,1,0,11100010);
+		Main.io.writeBufferedLCD(0,11100010);
 	}
 	
 	public void dataWrite(byte _data){
-		Main.io.writeLCD(1,1,0,_data);
+		Main.io.writeLCD(1,_data);
 	}
-//	public byte dataRead(){
-//		Main.io.writeLCD(1,0,1,0);
-//		return 0;
-//	}
+	
 	public void flash(int _n, int _t) {
 		for (int i = 0; i < _n; i++) {
 			ledsOn();
@@ -79,5 +73,17 @@ public class LCD extends ScreenElement {
 			}
 			System.out.println();
 		}
+	}
+
+	public int getMOSI() {
+		return MOSI;
+	}
+
+	public int getSCL() {
+		return SCL;
+	}
+
+	public int getA0() {
+		return A0;
 	}
 }
