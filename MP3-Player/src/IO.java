@@ -9,9 +9,9 @@ public class IO {
 		System.loadLibrary("gpio");
 	}
 
-	public void sleep(int a) {
+	public void sleep(int a, int b) {
 		try {
-			Thread.sleep(a);
+			Thread.sleep(a, b);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 
