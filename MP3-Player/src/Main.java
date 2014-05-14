@@ -14,7 +14,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		System.out.println("**STARTING UP**");
 		initialize();
-		io.sleep(1000);
+		io.sleep(1000,0);
 		lcd.drawScreenElements();
 		lcd.ledsOff();
 		player.setTrackNumber(1);

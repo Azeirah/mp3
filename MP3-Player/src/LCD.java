@@ -38,9 +38,9 @@ public class LCD extends ScreenElement {
 	public void flash(int _n, int _t) {
 		for (int i = 0; i < _n; i++) {
 			ledsOn();
-			Main.io.sleep(_t);
+			Main.io.sleep(_t,0);
 			ledsOff();
-			Main.io.sleep(_t);
+			Main.io.sleep(_t,0);
 		}
 	}
 
