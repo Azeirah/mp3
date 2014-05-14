@@ -72,6 +72,7 @@ public class ScreenElement {
 	}
 
 	protected void setPixel(int x, int y) {
+		//VOOR THOMAAAAAAAS!
 		// something something IO.writeLCD?
 		//System.out.println("DE SETPIXEL METHODE IS LEEG, DEZE MOET NOG GEMAAKT WORDEN.");
 	}

@@ -12,26 +12,26 @@ public class LCD extends ScreenElement {
 	}
 	
 	public void displayOn(){
-		Main.io.writeBufferedLCD(0,10101111);
+		Main.io.writeBufferedLCD(0,(byte)0b10101111);
 	}
 	
 	public void displayOff(){
-		Main.io.writeBufferedLCD(0,10101110);
+		Main.io.writeBufferedLCD(0,(byte)0b10101110);
 	}
 	
 	public void ledsOn() {
-		Main.io.writeBufferedLCD(0,10100101);
+		Main.io.writeBufferedLCD(0,(byte)0b10100101);
 	}
 
 	public void ledsOff() {
-		Main.io.writeBufferedLCD(0,10100100);
+		Main.io.writeBufferedLCD(0,(byte)0b10100100);
 	}
 
 	public void reset(){
-		Main.io.writeBufferedLCD(0,11100010);
+		Main.io.writeBufferedLCD(0,(byte)0b11100010);
 	}
 	
-	public void dataWrite(byte _data){
+	public void dataWrite(boolean _data){
 		Main.io.writeLCD(1,_data);
 	}
 	
