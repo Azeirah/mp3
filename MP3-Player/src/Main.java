@@ -27,7 +27,7 @@ public class Main {
 		rootPath = System.getProperty("user.dir");
 		System.out.println("    Working directory: " + rootPath);
 		lcd = new LCD();
-		ScreenElement _intro = new ScreenElement(0,0,Main.rootPath + "\\res\\images\\Intro.bmp");
+		ScreenElement _intro = new ScreenElement(0,0,Main.rootPath + "/res/images/Intro.bmp");
 		lcd.addScreenElement(_intro);
 		//lcd.init();
 		System.out.println("    LCD created...");
