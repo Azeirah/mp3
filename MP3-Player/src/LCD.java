@@ -1,37 +1,47 @@
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-//Now we just need a way to actually write them via the IO class.
-public class LCD {
-	private int width;
-	private int height;
-
-	public void init() throws IOException {
-
+public class LCD extends ScreenElement {
+	private int MOSI = 57;
+	private int SCL = 58;
+	private int A0 = 59;
+	
+	public LCD() throws IOException {
+        super(0, 0);
+        width = 240;
+		height = 64;		
 	}
-
+	
+	public void displayOn(){
+		Main.io.writeBufferedLCD(0,(byte) 0xAF);
+	}
+	
+	public void displayOff(){
+		Main.io.writeBufferedLCD(0,(byte) 0xAE);
+	}
+	
 	public void ledsOn() {
-
+		Main.io.writeBufferedLCD(0,(byte) 0xA5);
 	}
 
 	public void ledsOff() {
-
+		Main.io.writeBufferedLCD(0,(byte) 0x94);
 	}
 
+	public void reset(){
+		Main.io.writeBufferedLCD(0, (byte) 0x72);
+	}
+	
+	public void dataWrite(boolean _data){
+		Main.io.writeLCD(1,_data);
+	}
+	
 	public void flash(int _n, int _t) {
 		for (int i = 0; i < _n; i++) {
 			ledsOn();
-			Main.io.sleep(_t);
+			Main.io.sleep(_t,0);
 			ledsOff();
-			Main.io.sleep(_t);
+			Main.io.sleep(_t,0);
 		}
-
-	}
-
-	public void setPixel(int x, int y) {
-
 	}
 
 	public void drawSinus() {
@@ -41,14 +51,18 @@ public class LCD {
 		}
 	}
 
-	public void intro(int[][] _array) {
+	public void draw(ScreenElement _element) {
 		ledsOff();
-		for (short x = 0; x < width; x++) {// LCD.intro.length
-			for (short y = 0; y < height; y++) {// LCD.intro[x].length
-				if (_array[y][x] == 1) {// LCD.intro[x][y] == 1
+		for (short x = 0; x < height; x++) {
+			for (short y = 0; y < width; y++) {
+				if (_element.getDotArray()[x][y]) {
 					setPixel(x, y);
+					Main.console.printDebug("█");
+				} else {
+					Main.console.printDebug(" ");
 				}
 			}
+			System.out.println("");
 		}
 	}
 
@@ -61,34 +75,15 @@ public class LCD {
 		}
 	}
 
-	public int[][] loadBMPImage(String BMPFileName) throws IOException {
-		BufferedImage image = ImageIO.read(getClass().getResource(BMPFileName));
-		int[][] _array2D = new int[image.getHeight()][image.getWidth()];
-
-		for (int yPixel = 0; yPixel < image.getHeight(); yPixel++) {
-			for (int xPixel = 0; xPixel < image.getWidth(); xPixel++) {
-				int color = image.getRGB(xPixel, yPixel);
-				if (color == Color.BLACK.getRGB()) {
-					_array2D[yPixel][xPixel] = 1;
-				} else {
-					_array2D[yPixel][xPixel] = 0; // ?
-				}
-			}
-		}
-		return _array2D;
+	public int getMOSI() {
+		return MOSI;
 	}
 
-	public int[][] invert(int[][] array2D) {
-		for (int x = 0; x < array2D.length; x++) {
-			for (int y = 0; y < array2D[x].length; y++) {
-				int cell = array2D[x][y];
-				if (cell == 1) {
-					array2D[x][y] = 0;
-				} else if (cell == 0) {
-					array2D[x][y] = 1;
-				}
-			}
-		}
-		return array2D;
+	public int getSCL() {
+		return SCL;
+	}
+
+	public int getA0() {
+		return A0;
 	}
 }
