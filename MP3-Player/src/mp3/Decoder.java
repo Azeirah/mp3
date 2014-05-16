@@ -1,3 +1,5 @@
+package mp3;
+
 public class Decoder {
 	//Declare pins
     private int RST = 82;
@@ -22,25 +24,27 @@ public class Decoder {
     private byte WRAM = 0x06;
     private byte WRAMADRESS = 0x07;
     private byte VOLUME = 0x0B; //When using this: Most significant byte = left channel volume, least significant byte = right channel volume
-    //0xFEFE = silent
-    //0x0000 = LOUD
-    
-    
-    public Decoder() {
+    public Decoder(Main parent) {
 //        sendInstruction();
+        this.parent = parent;
     }
+
+
+    //0x0000 = LOUD
+    //0xFEFE = silent
+    private Main parent;
 
     public boolean isReadyForReadWrite() {
         // The DREQ pin/signal is used to signal if VS1033’s 2048-byte FIFO is capable of receiving data. If
         // DREQ is high, VS1033 can take at least 32 bytes of SDI data or one SCI command. DREQ is turned low
         // when the stream buffer is too full and for the duration of a SCI command.
-        return Main.io.readPin(DREQ);
+        return parent.io.readPin(DREQ);
     }
 
     public void sendBit(boolean bit) {
-        Main.io.writePin(SI, bit);
-        Main.io.writePin(SCLK, true);
-        Main.io.writePin(SCLK, false);
+        parent.io.setPin(SI, bit);
+        parent.io.setPin(SCLK, true);
+        parent.io.setPin(SCLK, false);
     }
 
     public void SCI_WRITE(byte address, short data) {
@@ -48,9 +52,9 @@ public class Decoder {
     }
 
     public void sendInstruction(byte instruction, byte address, short data) {
-        Main.io.writePin(CS, false);
+        parent.io.setPin(CS, false);
         while (!isReadyForReadWrite()) {
-            Main.io.sleep(0, 25);
+            Util.sleep(0, 25);
         }
         for (int i = 0; i < 7; i++) {
             sendBit((instruction >> i & 1) == 1);
@@ -61,6 +65,6 @@ public class Decoder {
         for (int i = 0; i < 15; i++) {
             sendBit((data >> i & 1) == 1);
         }
-        Main.io.writePin(CS, true);
+        parent.io.setPin(CS, true);
     }
 }
