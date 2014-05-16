@@ -21,8 +21,9 @@ public class ScreenElement {
 		this.locationX = locationX;
 		this.locationY = locationY;
 	}
-	
-	protected ScreenElement(int locationX, int locationY,String _path) throws IOException {
+
+	protected ScreenElement(int locationX, int locationY, String _path)
+			throws IOException {
 		this.locationX = locationX;
 		this.locationY = locationY;
 		importImage(_path);
@@ -58,23 +59,24 @@ public class ScreenElement {
 
 	protected void drawScreenElement(ScreenElement element) {
 		boolean[][] dotArray = element.getDotArray();
-		for (int x = 0; x < element.getWidth(); x++) {
-			for (int y = 0; y < element.getHeight(); y++) {
-				if (dotArray[y][x]){
+		for (int y = 0; y < element.getHeight(); y++) {
+			for (int x = 0; x < element.getWidth(); x++) {
+				if (dotArray[y][x]) {
 					setPixel(x + element.getLocationX(),
 							y + element.getLocationY());
 					Main.console.printDebug("X");
-				}else{
+				} else {
 					Main.console.printDebug(".");
 				}
 			}
+			System.out.println("");
 		}
 	}
 
 	protected void setPixel(int x, int y) {
-		//VOOR THOMAAAAAAAS!
+		// VOOR THOMAAAAAAAS!
 		// something something IO.writeLCD?
-		//System.out.println("DE SETPIXEL METHODE IS LEEG, DEZE MOET NOG GEMAAKT WORDEN.");
+		// System.out.println("DE SETPIXEL METHODE IS LEEG, DEZE MOET NOG GEMAAKT WORDEN.");
 	}
 
 	public void fromBMPFile(File BMPFileName) throws IOException {
