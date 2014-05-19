@@ -1,6 +1,6 @@
 
 import java.io.*;
-import java.util.Date;
+//import java.util.Date;
  
 public class MP3Decoder extends Thread {
  
@@ -21,7 +21,7 @@ public class MP3Decoder extends Thread {
 //    }
  
     //het initialiseren van de mp3decoder
-    private void initialize() {
+    public void initialize() {
         try {
             this.command = new RandomAccessFile("/dev/spidev1.0", "rw");
  
