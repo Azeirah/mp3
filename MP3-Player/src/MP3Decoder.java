@@ -1,5 +1,6 @@
 
 import java.io.*;
+import java.util.Date;
 //import java.util.Date;
  
 public class MP3Decoder extends Thread {
@@ -52,29 +53,32 @@ public class MP3Decoder extends Thread {
         }
     }
  
-    private void play() {
+    public void play() {
         try {
             File a = new File("/dev/spidev1.1");
             FileOutputStream data = new FileOutputStream(a);
             FileInputStream fis = new FileInputStream(this.currentSong);
-             
+            Date date = new Date();
+            int time = (int) date.getTime();
             byte[] buffer = new byte[32];
             int length = 1;
             this.playedBytes = 0;
-             
+            
             //alleen in de loop blijven als het aantal gelezen bytes groter is dan 0 en de streamstatus is niet gelijk aan stop
-//            while ((length = fis.read(buffer)) > 0 && this.streamStatus != StreamStatus.STOP) {
-//                 
-//                while (gpio.ioread(Pin.DREQ.getPinNumber()) == 0) {
-//                    // do nothing
-//                }
-//                 
-//                //om de tijd van het nummer bij te houden, gebruiken we het aantal gespeelde bytes als houvast
+            while (true) {
+                 
+                while (gpio.ioread(83) == 0) {
+                    // do nothing
+                }
+                if(time + 10000 > new Date().getTime()){
+                	break;
+                }
+                //om de tijd van het nummer bij te houden, gebruiken we het aantal gespeelde bytes als houvast
 //                switch(this.streamStatus)
 //                {
 //                case PLAY:
-//                    this.playedBytes += length;
-//                    data.write(buffer, 0, length);
+                    this.playedBytes += length;
+                    data.write(buffer, 0, length);
 //                    break;
 //                case PAUSE:
 //                    while(this.streamStatus == StreamStatus.PAUSE)
@@ -93,7 +97,7 @@ public class MP3Decoder extends Thread {
 //                    default:
 //                        //
 //                }
-//            }
+            }
  
             data.close();
             fis.close();
