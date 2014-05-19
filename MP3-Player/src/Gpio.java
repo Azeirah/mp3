@@ -1,6 +1,6 @@
 import java.io.IOException;
 
-class GPIO {
+public class Gpio {
         public native int ioinit();
         public native int iowrite(int a, int v);
         public native int ioread(int a);
