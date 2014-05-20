@@ -1,4 +1,4 @@
-package mp3;
+
 
 public class Console {
 	public boolean debug ;

@@ -1,4 +1,4 @@
-package mp3;
+
 
 import javax.imageio.ImageIO;
 

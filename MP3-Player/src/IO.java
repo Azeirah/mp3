@@ -1,4 +1,4 @@
-package mp3;
+
 
 public class IO {
 	protected native int ioinit();
