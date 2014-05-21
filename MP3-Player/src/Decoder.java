@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 
 public class Decoder {
@@ -27,6 +28,8 @@ public class Decoder {
     private byte WRAMADRESS = 0x07;
     private byte VOLUME = 0x0B; // When using this: Most significant byte = left
 
+    private File song;
+
     // right channel volume
 
     // 0x0000 = LOUD
@@ -36,12 +39,19 @@ public class Decoder {
         this.parent = parent;
     }
 
+    public void setSong(String songname) {
+        String path = parent.rootPath + "/" + songname;
+        song = new File(songname);
+    }
+
     public void play() throws IOException {
         while (DREQ == 0) {
             // wait 10 ns to give other threads the opportunity to do stuff
             Util.sleep(0, 10);
         }
         parent.io.setSCI_MODE((byte) 0x0C, (byte) 0x00);
+        parent.io.setVolume(50);
+
 
     }
 }

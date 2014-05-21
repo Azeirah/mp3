@@ -6,4 +6,8 @@ public class Util {
             e.printStackTrace();
         }
     }
+
+    public static String joinPath(String path, String path2) {
+        return path + "/" + path2;
+    }
 }

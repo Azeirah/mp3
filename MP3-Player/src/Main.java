@@ -2,14 +2,14 @@ import java.io.IOException;
 
 public class Main {
     // Declare Classes
-    LCD lcd;
-    Decoder decoder;
-    General_IO io;
+    private LCD lcd;
+    private Decoder decoder;
+    public General_IO io;
     public static Console console;
-    String rootPath;
-    Menu menu;
-    Player player;
-    boolean debug = true;
+    public String rootPath;
+    private Menu menu;
+    private Player player;
+    private boolean debug = true;
 
     public static void main(String[] args) throws IOException {
         Main main = new Main();
@@ -22,7 +22,7 @@ public class Main {
         main.player.playTrackNumber(1);// mp3.Player plays first track
     }
 
-    private void init_io() {
+    private void init_io() throws IOException {
         System.out.println("Initializing IO ...");
         io = new General_IO();
         io.ioinit();
