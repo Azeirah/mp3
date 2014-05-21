@@ -1,6 +1,13 @@
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 public class General_IO extends Gpio {
-    public General_IO() {
-        super();
+    RandomAccessFile SCI;
+    RandomAccessFile SDI;
+
+    public General_IO() throws IOException {
+        this.SCI = new RandomAccessFile("/dev/spidev1.0", "rw");
+        this.SDI = new RandomAccessFile("/dev/spidev1.1", "rw");
     }
 
     public void writeBufferedLCD(int _A0, byte _l) {
@@ -22,6 +29,23 @@ public class General_IO extends Gpio {
 
     public void setPin(int pin, boolean pinState) {
         iowrite(pin, (pinState) ? 1 : 0);
+    }
+
+    public void writeSCI(byte[] sequence) throws IOException {
+        iowrite(67, 1);
+        SCI.write(sequence);
+        iowrite(67, 0);
+    }
+
+    public void writeSDI(byte[] sequence) throws IOException {
+        iowrite(67, 0);
+        SDI.write(sequence);
+        iowrite(67, 1);
+    }
+
+    public void setSCI_MODE(byte b1, byte b2) throws IOException {
+        byte[] sequence = {0x02, 0x0, b1, b2};
+        writeSCI(sequence);
     }
 
     public boolean readPin(int _N) {

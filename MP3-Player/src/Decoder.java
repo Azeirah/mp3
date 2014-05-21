@@ -32,6 +32,13 @@ public class Decoder {
         this.parent = parent;
     }
 
+    public void play() {
+        while (DREQ == 0) {
+            // wait 10 ns to give other threads the opportunity to do stuff
+            Util.sleep(0, 10);
+        }
+    }
+
     private Main parent;
 
     public boolean isReadyForReadWrite() {
@@ -42,32 +49,5 @@ public class Decoder {
         // when the stream buffer is too full and for the duration of a SCI
         // command.
         return parent.io.readPin(DREQ);
-    }
-
-    public void sendBit(boolean bit) {
-        parent.io.setPin(SI, bit);
-        parent.io.setPin(SCLK, true);
-        parent.io.setPin(SCLK, false);
-    }
-
-    public void SCI_WRITE(byte address, short data) {
-        sendInstruction((byte) 0x2, address, data);
-    }
-
-    public void sendInstruction(byte instruction, byte address, short data) {
-        parent.io.setPin(CS, false);
-        while (!isReadyForReadWrite()) {
-            Util.sleep(0, 25);
-        }
-        for (int i = 0; i < 7; i++) {
-            sendBit((instruction >> i & 1) == 1);
-        }
-        for (int i = 0; i < 7; i++) {
-            sendBit((address >> i & 1) == 1);
-        }
-        for (int i = 0; i < 15; i++) {
-            sendBit((data >> i & 1) == 1);
-        }
-        parent.io.setPin(CS, true);
     }
 }
