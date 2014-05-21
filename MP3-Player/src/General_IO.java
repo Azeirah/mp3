@@ -1,16 +1,11 @@
-
-
-/**
- * Created by student on 16-5-14.
- */
-public class General_IO extends IO {
+public class General_IO extends Gpio {
     public General_IO() {
         super();
     }
 
     public void writeBufferedLCD(int _A0, byte _l) {
         for (int i = 0; i < 8; i++) {
-            writeLCD(_A0, (_l >> i & 1)==1 );
+            writeLCD(_A0, (_l >> i & 1) == 1);
         }
     }
 

@@ -1,28 +1,26 @@
-
-
 import java.io.IOException;
 
 public class Main {
-	// Declare Classes
-	LCD lcd;
+    // Declare Classes
+    LCD lcd;
     Decoder decoder;
     General_IO io;
-	public static Console console;
-	String rootPath;
-	Menu menu;
-	Player player;
-	boolean debug = true;
+    public static Console console;
+    String rootPath;
+    Menu menu;
+    Player player;
+    boolean debug = true;
 
-	public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         Main main = new Main();
-		System.out.println("**STARTING UP**");
-		main.initialize();
-		Util.sleep(1000, 0);
+        System.out.println("**STARTING UP**");
+        main.initialize();
+        Util.sleep(1000, 0);
         main.lcd.drawScreenElements();
         main.lcd.ledsOff();
         main.player.setTrackNumber(1);
         main.player.playTrackNumber(1);// mp3.Player plays first track
-	}
+    }
 
     private void init_io() {
         System.out.println("Initializing IO ...");
@@ -67,7 +65,7 @@ public class Main {
         System.out.println("Done initializing player");
     }
 
-	public void initialize() throws IOException {// Initialize all
+    public void initialize() throws IOException {// Initialize all
         init_path();
         init_io();
         init_lcd();
