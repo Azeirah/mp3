@@ -55,4 +55,10 @@ public class General_IO extends Gpio {
         }
         return _value;
     }
+
+    public void setVolume(int volume) throws IOException {
+        byte vol = (byte) ((volume / 100) * 256);
+        byte[] sequence = {(byte) 0x2, (byte) 0xB, vol, vol};
+        writeSCI(sequence);
+    }
 }
