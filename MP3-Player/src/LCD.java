@@ -5,7 +5,11 @@ public class LCD extends ScreenElement {
     static int SCL = 58;
     static int A0 = 59;
     private Main parent;
-
+    
+    //Keeps track of the screen's state and gets updated by setPixel()
+    protected static boolean[][] screenState;
+    
+    
     public LCD(Main parent) throws IOException {
         super(0, 0);
         width = 240;

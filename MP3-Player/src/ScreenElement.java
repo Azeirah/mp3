@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -15,6 +16,8 @@ public class ScreenElement {
     protected int locationY;
     protected ArrayList<ScreenElement> childElements = new ArrayList<ScreenElement>();
     private boolean loaded = false;
+    private Main parent;
+    
 
     protected ScreenElement(int locationX, int locationY) {
         this.locationX = locationX;
@@ -73,9 +76,55 @@ public class ScreenElement {
     }
 
     protected void setPixel(int x, int y) {
-        // VOOR THOMAAAAAAAS!
-        // something something mp3.IO.writeLCD?
-        // System.out.println("DE SETPIXEL METHODE IS LEEG, DEZE MOET NOG GEMAAKT WORDEN.");
+        byte column;
+        byte page;
+        byte columnMSN;
+        byte columnLSN;
+        byte pageWrite;
+    	String toWrite = "";
+        byte dataWrite;
+        
+    	//Check input
+    	if(x <= 240 && y <= 64){
+	    	//Figure out the column's Most significant and least significant nibble + the page to edit.
+	        column = (byte) x;
+	        
+	        columnMSN = (byte) (column >> 4);
+	        //Prep the nibbles for writing
+	        columnMSN = (byte) (columnMSN | 16);
+	        
+	        columnLSN = (byte) (column & 15);
+	        
+	    	page = (byte) (y / 8);
+	    	//Prep the page for writing
+	    	pageWrite = (byte) (page | 176);
+    	} else {
+    		System.out.println("Something's wrong with your input for setPixel()");
+    		return;
+    	}
+    	
+    	//Select the column
+		parent.io.writeBufferedLCD(0, columnMSN);
+		parent.io.writeBufferedLCD(0, columnLSN);
+		
+		//Select the page
+		parent.io.writeBufferedLCD(0, pageWrite);
+		
+    	//Update the screen state
+		LCD.screenState[x][y] = true;
+		
+		//Fetch screen-state which now has the added pixel to be set
+		for(int i = page * 8 + 7; i >= page * 8; i--){
+			if(LCD.screenState[x][i]){
+				toWrite = toWrite.concat("1");
+			} else {
+				toWrite = toWrite.concat("0");
+			}
+		}
+		dataWrite = (byte) Integer.parseInt(toWrite, 2);
+		
+		//Actually write it to the LCD
+		parent.io.writeBufferedLCD(1, dataWrite);
     }
 
     public void fromBMPFile(File BMPFileName) throws IOException {
