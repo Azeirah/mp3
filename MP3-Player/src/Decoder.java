@@ -1,5 +1,7 @@
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class Decoder {
     // channel volume, least significant byte =
@@ -29,29 +31,55 @@ public class Decoder {
     private byte VOLUME = 0x0B; // When using this: Most significant byte = left
 
     private File song;
+    private int bytesPlayed = 0;
+
 
     // right channel volume
 
     // 0x0000 = LOUD
     // 0xFEFE = silent
-    public Decoder(Main parent) {
+    public Decoder(Main parent) throws IOException {
         // sendInstruction();
         this.parent = parent;
+        setSong("test.mp3");
+//        byte[] clock = { 0x02, 0x03, -101, -24};
+//        parent.io.writeSCI(freq);
+//        parent.io.writeSCI(clock);
     }
 
     public void setSong(String songname) {
-        String path = parent.rootPath + "/" + songname;
-        song = new File(songname);
+        String path = parent.rootPath + "/songs/" + songname;
+        System.out.println("songname = [" + songname + "]");
+        song = new File(path);
     }
 
-    public void play() throws IOException {
-        while (DREQ == 0) {
-            // wait 10 ns to give other threads the opportunity to do stuff
-            Util.sleep(0, 10);
+    public void play() throws IOException, Exception {
+        byte[] init = {2, 0, 8, 38};
+        byte[] clockf = {2, 3, -101, -24};
+        byte[] audata = {2, 5, -84, 69};
+        if (song == null) {
+            throw new Exception("You must select a song before trying to play");
         }
-        parent.io.setSCI_MODE((byte) 0x0C, (byte) 0x00);
+        while (parent.io.ioread(DREQ) == 0) {
+            // wait 10 ns to give other threads the opportunity to do stuff
+//            Util.sleep(0, 10);
+//            System.out.println("DREQ is high, waiting for low");
+        }
+        parent.io.writeSCI(init);
+        parent.io.writeSCI(clockf);
+        parent.io.writeSCI(audata);
         parent.io.setVolume(50);
+        RandomAccessFile audio = new RandomAccessFile(new File("songs/test.mp3"), "r");
+        byte[] buffer = new byte[32];
 
-
+        while (true) {
+            audio.read(buffer);
+            while (parent.io.ioread(DREQ) == 0) {
+//                Util.sleep(0, 10);
+//                System.out.println("DREQ is high, waiting for low");
+            }
+            bytesPlayed += 32;
+            parent.io.writeSDI(buffer);
+        }
     }
 }

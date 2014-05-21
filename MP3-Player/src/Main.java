@@ -3,7 +3,7 @@ import java.io.IOException;
 public class Main {
     // Declare Classes
     private LCD lcd;
-    private Decoder decoder;
+    public Decoder decoder;
     public General_IO io;
     public static Console console;
     public String rootPath;
@@ -11,15 +11,18 @@ public class Main {
     private Player player;
     private boolean debug = true;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, Exception {
         Main main = new Main();
         System.out.println("**STARTING UP**");
         main.initialize();
         Util.sleep(1000, 0);
-        main.lcd.drawScreenElements();
-        main.lcd.ledsOff();
+        System.out.println("ready to go");
+//        main.lcd.drawScreenElements();
+//        main.lcd.ledsOff();
         main.player.setTrackNumber(1);
-        main.player.playTrackNumber(1);// mp3.Player plays first track
+        main.player.playTrackNumber(1);// mp3.Player plays first trackmain
+        System.out.println("start playing song");
+        main.decoder.play();
     }
 
     private void init_io() throws IOException {
@@ -41,7 +44,7 @@ public class Main {
         System.out.println("Done initializing LCD");
     }
 
-    private void init_decoder() {
+    private void init_decoder() throws IOException {
         System.out.println("Initialing decoder ...");
         decoder = new Decoder(this);
         System.out.println("Done initializing decoder");
@@ -68,7 +71,7 @@ public class Main {
     public void initialize() throws IOException {// Initialize all
         init_path();
         init_io();
-        init_lcd();
+//        init_lcd();
         init_decoder();
         init_console();
         init_menu();

@@ -32,15 +32,15 @@ public class General_IO extends Gpio {
     }
 
     public void writeSCI(byte[] sequence) throws IOException {
-        iowrite(67, 1);
+//        iowrite(67, 1);
         SCI.write(sequence);
-        iowrite(67, 0);
+//        iowrite(67, 0);
     }
 
     public void writeSDI(byte[] sequence) throws IOException {
-        iowrite(67, 0);
+//        iowrite(67, 0);
         SDI.write(sequence);
-        iowrite(67, 1);
+//        iowrite(67, 1);
     }
 
     public void setSCI_MODE(byte b1, byte b2) throws IOException {
@@ -57,6 +57,7 @@ public class General_IO extends Gpio {
     }
 
     public void setVolume(int volume) throws IOException {
+        //TODO: FIX DIS SHIT, IT'S VERY BROKEN.
         byte vol = (byte) ((volume / 100) * 256);
         byte[] sequence = {(byte) 0x2, (byte) 0xB, vol, vol};
         writeSCI(sequence);
