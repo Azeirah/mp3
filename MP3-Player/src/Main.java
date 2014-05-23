@@ -17,8 +17,8 @@ public class Main {
         main.initialize();
         Util.sleep(1000, 0);
         System.out.println("ready to go");
-//        main.lcd.drawScreenElements();
-//        main.lcd.ledsOff();
+        main.lcd.drawScreenElements();
+        main.lcd.ledsOff();
         main.player.setTrackNumber(1);
         main.player.playTrackNumber(1);// mp3.Player plays first trackmain
         System.out.println("start playing song");
@@ -71,7 +71,7 @@ public class Main {
     public void initialize() throws IOException {// Initialize all
         init_path();
         init_io();
-//        init_lcd();
+       // init_lcd();
         init_decoder();
         init_console();
         init_menu();

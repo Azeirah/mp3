@@ -68,7 +68,7 @@ public class Decoder {
         parent.io.writeSCI(init);
         parent.io.writeSCI(clockf);
         parent.io.writeSCI(audata);
-        parent.io.setVolume(50);
+        parent.io.setVolume(50);//HIERZOOOOOOOO
         RandomAccessFile audio = new RandomAccessFile(new File("songs/test.mp3"), "r");
         byte[] buffer = new byte[32];
 

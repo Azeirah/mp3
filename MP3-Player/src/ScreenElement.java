@@ -61,20 +61,34 @@ public class ScreenElement {
 
     protected void drawScreenElement(ScreenElement element) {
         boolean[][] dotArray = element.getDotArray();
-        for (int y = 0; y < element.getHeight(); y++) {
-            for (int x = 0; x < element.getWidth(); x++) {
-                if (dotArray[y][x]) {
-                    setPixel(x + element.getLocationX(),
-                            y + element.getLocationY());
-                    Main.console.printDebug("X");
-                } else {
-                    Main.console.printDebug(".");
-                }
-            }
-            System.out.println("");
-        }
+//        for (int y = 0; y < element.getHeight(); y++) {
+//            for (int x = 0; x < element.getWidth(); x++) {
+//                if (dotArray[y][x]) {
+//                    setPixel(x + element.getLocationX(),
+//                            y + element.getLocationY());
+//                    Main.console.printDebug("X");
+//                } else {
+//                    Main.console.printDebug(".");
+//                }
+//            }
+//            System.out.println("");
+//        }
+        draw(dotArray);
     }
 
+    protected void draw(boolean[][] _screen){
+    	String[][] _return;
+    	for(int i = 0; i < width;i++){
+    		for(int j = 0;j < 8;j++){
+    			for(int y= 0; y <8; y++){
+    				if(_screen[i][(8*j+y)]){
+    					
+    				}
+    			}
+    		}
+    	}
+    }
+    
     protected void setPixel(int x, int y) {
         byte column;
         byte page;

@@ -58,7 +58,8 @@ public class General_IO extends Gpio {
 
     public void setVolume(int volume) throws IOException {
         //TODO: FIX DIS SHIT, IT'S VERY BROKEN.
-        byte vol = (byte) ((volume / 100) * 256);
+        //byte vol = (byte) ((volume / 100) * 256);
+    	byte vol = (byte)40;
         byte[] sequence = {(byte) 0x2, (byte) 0xB, vol, vol};
         writeSCI(sequence);
     }
