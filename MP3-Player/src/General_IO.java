@@ -11,16 +11,20 @@ public class General_IO extends Gpio {
     }
 
     public void writeBufferedLCD(int _A0, byte _l) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 8; i > 0; i--) {
             writeLCD(_A0, (_l >> i & 1) == 1);
+            System.out.print((_l >> i & 1) == 1);
         }
+        System.out.println("");
     }
 
     public void writeLCD(int _A0, boolean _l) {
-        setPin(LCD.A0, _A0);
-        setPin(LCD.MOSI, _l);
-        setPin(LCD.SCL, true);
-        setPin(LCD.SCL, false);
+    	Util.sleep(0,50);
+        setPin(Pins.LCDA0.getNumber(), _A0);
+        setPin(Pins.LCDSI.getNumber(), _l);
+        setPin(Pins.LCDSCL.getNumber(), true);
+        Util.sleep(0,50);
+        setPin(Pins.LCDSCL.getNumber(), false);
     }
 
     public void setPin(int pin, int pinState) {

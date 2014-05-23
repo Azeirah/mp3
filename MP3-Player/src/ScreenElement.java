@@ -73,21 +73,21 @@ public class ScreenElement {
 //            }
 //            System.out.println("");
 //        }
-        draw(dotArray);
+      // draw(dotArray);
     }
 
-    protected void draw(boolean[][] _screen){
-    	String[][] _return;
-    	for(int i = 0; i < width;i++){
-    		for(int j = 0;j < 8;j++){
-    			for(int y= 0; y <8; y++){
-    				if(_screen[i][(8*j+y)]){
-    					
-    				}
-    			}
-    		}
-    	}
-    }
+//    protected void draw(boolean[][] _screen){
+//    	String[][] _return;
+//    	for(int i = 0; i < width;i++){
+//    		for(int j = 0;j < 8;j++){
+//    			for(int y= 0; y <8; y++){
+//    				if(_screen[i][(8*j+y)]){
+//    					
+//    				}
+//    			}
+//    		}
+//    	}
+//    }
     
     protected void setPixel(int x, int y) {
         byte column;

@@ -1,9 +1,7 @@
 import java.io.IOException;
 
 public class LCD extends ScreenElement {
-    static int MOSI = 57;
-    static int SCL = 58;
-    static int A0 = 59;
+
     private Main parent;
     
     //Keeps track of the screen's state and gets updated by setPixel()
@@ -18,23 +16,23 @@ public class LCD extends ScreenElement {
     }
 
     public void displayOn() {
-        parent.io.writeBufferedLCD(0, (byte) 10101111);
+        parent.io.writeBufferedLCD(0, Util.stringToByte("10101111"));
     }
 
     public void displayOff() {
-        parent.io.writeBufferedLCD(0, (byte) 10101110);
+        parent.io.writeBufferedLCD(0, Util.stringToByte("10101110"));
     }
 
     public void ledsOn() {
-        parent.io.writeBufferedLCD(0, (byte) 10100101);
+        parent.io.writeBufferedLCD(0, Util.stringToByte("10100101"));
     }
 
     public void ledsOff() {
-        parent.io.writeBufferedLCD(0, (byte) 10100100);
+        parent.io.writeBufferedLCD(0, Util.stringToByte("10100100"));
     }
 
     public void reset() {
-        parent.io.writeBufferedLCD(0, (byte) 11100010);
+        parent.io.writeBufferedLCD(0, Util.stringToByte("11100010"));
     }
 
     public void dataWrite(boolean _data) {
