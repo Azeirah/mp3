@@ -17,13 +17,16 @@ public class Main {
 		main.initialize();
 		Util.sleep(1000, 0);
 		System.out.println("ready to go");
-		main.lcd.displayOn();
-		System.out.println("LCD ON");
-		main.lcd.ledsOff();
-		System.out.println("Leds off");
+		main.lcd.LCInit();
+		Util.sleep(250, 0);
 		main.lcd.ledsOn();
-		System.out.println("Leds ON");
-		main.lcd.drawScreenElements();
+		//main.lcd.displayOn();
+		//System.out.println("LCD ON");
+		//main.lcd.ledsOff();
+		//System.out.println("Leds off");
+		//main.lcd.ledsOn();
+		//System.out.println("Leds ON");
+		//main.lcd.drawScreenElements();
 //		main.player.setTrackNumber(1);
 //		main.player.playTrackNumber(1);// mp3.Player plays first trackmain
 //		System.out.println("start playing song");
@@ -37,16 +40,9 @@ public class Main {
 		for (int pin : pins) {
 			Gpio.iowrite(pin, 0);
 		}
-		io.writeLCD(0,true);
-		io.writeLCD(0,true);
-		io.writeLCD(0,false);
-		io.writeLCD(0,false);
-		io.writeLCD(0,false);
-		io.writeLCD(0,true);
-		io.writeLCD(0,false);
 		System.out.println("Pins set to LOW");
 	}
-
+	
 	private void init_io() throws IOException {
 		System.out.println("Initializing IO ...");
 		io = new General_IO();
@@ -65,6 +61,8 @@ public class Main {
 		ScreenElement intro = new ScreenElement(0, 0, rootPath
 				+ "/res/images/Intro.bmp");
 		lcd.addScreenElement(intro);
+		
+		
 
 		System.out.println("Done initializing LCD");
 	}
@@ -98,10 +96,10 @@ public class Main {
 		init_io();
 		init_pins();
 		init_lcd();
-		init_decoder();
+		//init_decoder();
 		init_console();
-		init_menu();
-		init_player();
+		//init_menu();
+		//init_player();
 		System.out.println("----------------------------------------");
 		System.out.println("Done initializing everything! :)");
 	}

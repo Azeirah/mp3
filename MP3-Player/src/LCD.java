@@ -14,7 +14,85 @@ public class LCD extends ScreenElement {
         height = 64;
         this.parent = parent;
     }
-
+    
+    public void LCInit(){
+    	System.out.println("Initialising LCD");
+    	parent.io.setPin(57, 0);
+    	parent.io.setPin(58, 0);
+    	//Dummy
+    	resOff();
+    	Util.sleep(250, 0);
+    	resOn();
+    	Util.sleep(250, 0);
+    	//For real this time
+    	resOff();
+    	Util.sleep(250, 0);
+    	resOn();
+    	bias();
+    	ADC();
+    	SHL();
+    	line0();
+    	powerControl();
+    	resistorRatio();
+    	referenceVoltage();
+    	displayOn();
+    	//Page adress 0
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("10110000"));
+    	//Column adress 0
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("00010000"));
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("00000000"));	
+    	System.out.println("LCD initialised");
+    }
+    
+    //Turns !RES on and off
+    public void resOn(){
+    	parent.io.setPin(59, 1);
+    }
+    
+    public void resOff(){
+    	parent.io.setPin(59,  0);
+    }
+    
+    //Sets the bias(?)
+    public void bias(){
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("10100010"));
+    }
+    
+    //Makes sure there is no flip on X-Axis
+    public void ADC(){
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("10100000"));
+    }
+    
+    //Makes sure there is no flip on Y-Axis
+    public void SHL(){
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("11000000"));
+    }
+    
+    //Makes sure RAM address 0 = Page 0 D0
+    public void line0(){
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("01000000"));
+    }
+    
+    //Gradually turns on the voltage follower/regulator and convertor
+    public void powerControl(){
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("00101100"));
+    	Util.sleep(50, 0);
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("00101110"));
+    	Util.sleep(50, 0);
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("00101111"));
+    	Util.sleep(50, 0);
+    }
+    
+    //Sets resistor ratio(?)
+    public void resistorRatio(){
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("00100110"));
+    }
+    
+    public void referenceVoltage(){
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("10000001"));
+    	parent.io.writeBufferedLCD(0, Util.stringToByte("00011010"));
+    }
+    
     public void displayOn() {
         parent.io.writeBufferedLCD(0, Util.stringToByte("10101111"));
     }
