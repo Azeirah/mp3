@@ -42,7 +42,7 @@ public class General_IO extends Gpio {
     	setPin(81, 1);
     	Util.sleep(0, 140);
     	
-    	for(int i = 0; i < 7; i++){
+    	for(int i = 0; i < 8; i++){
     		if(instruction.charAt(7 - i) == '1'){
     			setPin(LCDPins[i], 1);
     		} else {
