@@ -7,6 +7,7 @@ public class Main {
 	public General_IO io;
 	public static Console console;
 	public String rootPath;
+    public Interface anInterface;
 	private Menu menu;
 	private Player player;
 	private boolean debug = true;
@@ -50,7 +51,7 @@ public class Main {
 	private void init_io() throws IOException {
 		System.out.println("Initializing IO ...");
 		io = new General_IO();
-		Gpio.ioinit();
+		io.ioinit();
 		System.out.println("Done initializing IO");
 	}
 
@@ -74,6 +75,12 @@ public class Main {
 		decoder = new Decoder(this);
 		System.out.println("Done initializing decoder");
 	}
+
+    private void init_interface() {
+        System.out.println("Initialising interface ...");
+        anInterface = new Interface(io);
+        System.out.println("done initialising interface");
+    }
 
 	private void init_menu() {
 		System.out.println("Initializing menu ...");
@@ -99,6 +106,7 @@ public class Main {
 		init_pins();
 		init_lcd();
 		init_decoder();
+        init_interface();
 		init_console();
 		init_menu();
 		init_player();
