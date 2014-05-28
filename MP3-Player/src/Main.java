@@ -20,9 +20,9 @@ public class Main {
 		System.out.println("ready to go");
 		main.lcd.displayOn();
 		System.out.println("LCD ON");
-		main.lcd.ledsOff();
+		//main.lcd.ledsOff();
 		System.out.println("Leds off");
-		main.lcd.ledsOn();
+		//main.lcd.ledsOn();
 		System.out.println("Leds ON");
 		main.lcd.drawScreenElements();
 //		main.player.setTrackNumber(1);

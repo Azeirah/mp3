@@ -14,7 +14,7 @@ public class LCDTest {
 		main.initialize();
 		Util.sleep(1000, 0);
 		System.out.println("ready to go");
-		main.lcd.ledsOff();
+		//main.lcd.ledsOff();
 		main.lcd.drawScreenElements();
 	
 	}

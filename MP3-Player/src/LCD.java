@@ -1,13 +1,12 @@
 import java.io.IOException;
-
+//Whole lot of this needs to be rewritten
 public class LCD extends ScreenElement {
 
-    private Main parent;
-    
     //Keeps track of the screen's state and gets updated by setPixel()
     protected static boolean[][] screenState;
-    
-    
+    private Main parent;
+
+
     public LCD(Main parent) throws IOException {
         super(0, 0);
         width = 240;
@@ -16,37 +15,29 @@ public class LCD extends ScreenElement {
     }
 
     public void displayOn() {
-        parent.io.writeBufferedLCD(0, Util.stringToByte("10101111"));
+        parent.io.newWriteLCD(0, "00111111");
     }
 
     public void displayOff() {
-        parent.io.writeBufferedLCD(0, Util.stringToByte("10101110"));
+    	parent.io.newWriteLCD(0, "00111110");
     }
-
-    public void ledsOn() {
-        parent.io.writeBufferedLCD(0, Util.stringToByte("10100101"));
-    }
-
-    public void ledsOff() {
-        parent.io.writeBufferedLCD(0, Util.stringToByte("10100100"));
-    }
-
+    //Rewrite pls
     public void reset() {
         parent.io.writeBufferedLCD(0, Util.stringToByte("11100010"));
     }
 
-    public void dataWrite(boolean _data) {
-        parent.io.writeLCD(1, _data);
+    public void dataWrite(String _data) {
+        parent.io.newWriteLCD(1, _data);
     }
 
-    public void flash(int _n, int _t) {
-        for (int i = 0; i < _n; i++) {
-            ledsOn();
-            Util.sleep(_t, 0);
-            ledsOff();
-            Util.sleep(_t, 0);
-        }
-    }
+//    public void flash(int _n, int _t) {
+//        for (int i = 0; i < _n; i++) {
+//            ledsOn();
+//            Util.sleep(_t, 0);
+//            ledsOff();
+//            Util.sleep(_t, 0);
+//        }
+//    }
 
     public void drawSinus() {
         for (int x = 0; x < width; x++) {
@@ -55,8 +46,9 @@ public class LCD extends ScreenElement {
         }
     }
 
+    //Rewrite(?)
     public void draw(ScreenElement _element) {
-        ledsOff();
+        //ledsOff();
         for (short x = 0; x < height; x++) {
             for (short y = 0; y < width; y++) {
                 if (_element.getDotArray()[x][y]) {
@@ -69,7 +61,7 @@ public class LCD extends ScreenElement {
             System.out.println("");
         }
     }
-
+    
     public void print(int[][] _array2D) {
         for (int x = 0; x < _array2D.length; x++) {
             for (int y = 0; y < _array2D[x].length; y++) {

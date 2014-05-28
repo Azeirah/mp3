@@ -4,7 +4,9 @@ import java.io.RandomAccessFile;
 public class General_IO extends Gpio {
     RandomAccessFile SCI;
     RandomAccessFile SDI;
-
+    int[] LCDPins = {38, 39, 41, 42, 43, 54, 57, 58};
+    
+    
     public General_IO() throws IOException {
         this.SCI = new RandomAccessFile("/dev/spidev1.0", "rw");
         this.SDI = new RandomAccessFile("/dev/spidev1.1", "rw");
@@ -17,13 +19,59 @@ public class General_IO extends Gpio {
         }
         System.out.println("");
     }
-
+    
+    
+    //Writes to the LCD, instruction is in the format of "10101010", "1111000" etc.
+    public void newWriteLCD(int DI, String instruction){
+    	//Validate format
+    	if(instruction.length() != 8){
+    		System.out.println("Incorrect input format for writing to LCD");
+    		return;
+    	}
+    	
+    	for(int i = 0;  i < 7; i++){
+    		if(instruction.charAt(i) != '0' && instruction.charAt(i) != '1'){
+    			System.out.println("Incorrect input format for writing to LCD");
+    		}
+    	}
+  
+    	
+    	
+    	//Prepare pins
+    	setPin(59, DI);
+    	setPin(81, 1);
+    	Util.sleep(0, 140);
+    	
+    	for(int i = 0; i < 7; i++){
+    		if(instruction.charAt(7 - i) == '1'){
+    			setPin(LCDPins[i], 1);
+    		} else {
+    			setPin(LCDPins[i], 0);
+    		}
+    	}
+    	
+    	//Stuff it into the LCD
+    	setPin(60, 1);
+    	Util.sleep(0, 500);
+    	setPin(60, 0);
+    	Util.sleep(0, 30);
+    	
+    	//Put pins on low again
+    	for(int i : LCDPins){
+    		setPin(i, 0);
+    	}
+    	setPin(81, 0);
+    	setPin(59, 0);
+    	
+    }
+    
+    //For old display, outdated
     public void writeLCD(int _A0, boolean _l) {
-    	Util.sleep(0,50);
+        Util.sleep(0, 50);
         setPin(Pins.LCDA0.getNumber(), _A0);
         setPin(Pins.LCDSI.getNumber(), _l);
         setPin(Pins.LCDSCL.getNumber(), true);
-        Util.sleep(0,50);
+        Util.sleep(0, 50);
         setPin(Pins.LCDSCL.getNumber(), false);
     }
 
@@ -63,7 +111,7 @@ public class General_IO extends Gpio {
     public void setVolume(int volume) throws IOException {
         //TODO: FIX DIS SHIT, IT'S VERY BROKEN.
         //byte vol = (byte) ((volume / 100) * 256);
-    	byte vol = (byte)40;
+        byte vol = (byte) 40;
         byte[] sequence = {(byte) 0x2, (byte) 0xB, vol, vol};
         writeSCI(sequence);
     }
