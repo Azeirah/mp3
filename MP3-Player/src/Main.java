@@ -10,6 +10,7 @@ public class Main {
     private Menu menu;
     private Player player;
     private boolean debug = true;
+	public Interface anInterface;
 
     public static void main(String[] args) throws IOException, Exception {
         Main main = new Main();
@@ -45,10 +46,10 @@ public class Main {
         System.out.println("Pins set to LOW");
     }
 
-    private void init_io() throws IOException {
+    public void init_io() throws IOException {
         System.out.println("Initializing IO ...");
         io = new General_IO();
-        Gpio.ioinit();
+        io.ioinit();
         System.out.println("Done initializing IO");
     }
 
@@ -56,6 +57,12 @@ public class Main {
         rootPath = System.getProperty("user.dir");
     }
 
+    public void init_interface() {
+    	System.out.println("Initialising interface ...");
+    	anInterface = new Interface(io);
+    	System.out.println("Done initialising interface");
+    }
+    
     private void init_lcd() throws IOException {
         System.out.println("Initializing.LCD ...");
         lcd = new LCD(this);
@@ -98,6 +105,7 @@ public class Main {
         //init_lcd();
         //init_decoder();
         init_console();
+        init_interface();
         //init_menu();
         //init_player();
         System.out.println("----------------------------------------");

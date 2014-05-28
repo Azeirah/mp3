@@ -3,6 +3,8 @@
  */
 public class Interface {
     private General_IO io;
+    private int pressed = 0x01;
+    private int released = 0x10;
 
     public Interface(General_IO io) {
         this.io = io;
@@ -24,14 +26,18 @@ public class Interface {
         }
         return true;
     }
+    
+    public void read() {
+    	
+    }
 
     public boolean readButtonLeft() {
-        System.out.println("button left is: " + (Gpio.ioread(Pins.DrukknopL.getNumber()) == 1));
-        return debounce(Pins.DrukknopL.getNumber());
+//        System.out.println("button left is: " + (Gpio.ioread(Pins.DrukknopL.getNumber()) == 1));
+        return (!debounce(Pins.DrukknopR.getNumber())) && debounce(Pins.DrukknopL.getNumber());
     }
 
     public boolean readButtonRight() {
-        return debounce(Pins.DrukknopR.getNumber());
+        return (!debounce(Pins.DrukknopL.getNumber())) && debounce(Pins.DrukknopR.getNumber());
     }
 
     /**
@@ -70,7 +76,7 @@ public class Interface {
     }
 
     public boolean readButtonMiddle() {
-        return debounce(Pins.RDA.getNumber()) && debounce(Pins.RDB.getNumber());
+        return debounce(Pins.DrukknopL.getNumber()) && debounce(Pins.DrukknopR.getNumber());
     }
 
 
