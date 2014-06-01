@@ -89,57 +89,120 @@ public class ScreenElement {
 //    	}
 //    }
     
-    protected void setPixel(int x, int y) {
-        byte column;
-        byte page;
-        byte columnMSN;
-        byte columnLSN;
-        byte pageWrite;
-    	String toWrite = "";
-        byte dataWrite;
-        
-    	//Check input
-    	if(x <= 240 && y <= 64){
-	    	//Figure out the column's Most significant and least significant nibble + the page to edit.
-	        column = (byte) x;
-	        
-	        columnMSN = (byte) (column >> 4);
-	        //Prep the nibbles for writing
-	        columnMSN = (byte) (columnMSN | 16);
-	        
-	        columnLSN = (byte) (column & 15);
-	        
-	    	page = (byte) (y / 8);
-	    	//Prep the page for writing
-	    	pageWrite = (byte) (page | 176);
-    	} else {
-    		System.out.println("Something's wrong with your input for setPixel()");
-    		return;
-    	}
+    protected void setPixel(int x, int y){
     	
-    	//Select the column
-		parent.io.writeBufferedLCD(0, columnMSN);
-		parent.io.writeBufferedLCD(0, columnLSN);
-		
-		//Select the page
-		parent.io.writeBufferedLCD(0, pageWrite);
-		
-    	//Update the screen state
-		LCD.screenState[x][y] = true;
-		
-		//Fetch screen-state which now has the added pixel to be set
-		for(int i = page * 8 + 7; i >= page * 8; i--){
-			if(LCD.screenState[x][i]){
-				toWrite = toWrite.concat("1");
-			} else {
-				toWrite = toWrite.concat("0");
-			}
-		}
-		dataWrite = (byte) Integer.parseInt(toWrite, 2);
-		
-		//Actually write it to the LCD
-		parent.io.writeBufferedLCD(1, dataWrite);
+	      byte column;
+	      byte columnWrite;
+	      byte page;
+	      byte pageWrite;
+	  	  String toWrite = "";
+	      
+	      if( x < 128 && y < 64){
+	    	  //Determine which page to use
+	    	  page = (byte) (y / 8);
+	    	  
+	    	  //Determine which column to use (Y)
+	    	  if(x < 64){
+	    		  column = (byte) x;
+	    	  } else {
+	    		  column = (byte) (x - 64);
+	    	  }
+	    	  
+	    	  //Prep the page and column for writing
+	    	  pageWrite = (byte) (page | 184);
+	    	  columnWrite = (byte) (column | 64);
+	    	  
+	      } else {
+	    		System.out.println("Something's wrong with your input for setPixel()");
+	    		return;
+	      }
+	      
+	      //Select page
+	      parent.io.newWriteLCD(0, Util.byteToString(pageWrite));
+	      
+	      //Select column
+	      parent.io.newWriteLCD(0, Util.byteToString(columnWrite));
+	      
+	      //Update screen state
+	      LCD.screenState[x][y] = true;
+	      
+	      //Fetch screen-state which now has the added pixel to be set
+	      for(int i = page * 8 + 7; i >= page * 8; i--){
+	    	  if(LCD.screenState[x][i]){
+	    		  toWrite = toWrite.concat("1");
+	    	  } else {
+	    		  toWrite = toWrite.concat("0");
+	    	  }
+	      }
+	      
+	      //Alter CS to write on the right display
+	      if(x < 64){
+	    	  parent.io.setPin(81,  1);
+	      } else {
+	    	  parent.io.setPin(81,  0);
+	      }
+	      
+	      //Actually write it to the LCD
+	      parent.io.newWriteLCD(1, toWrite);
+	      
+	      //Put CS back on it's default (1)
+	      parent.io.setPin(81, 1);
     }
+    
+    
+    
+    // Old stuff
+//    protected void setPixel(int x, int y) {
+//        byte column;
+//        byte page;
+//        byte columnMSN;
+//        byte columnLSN;
+//        byte pageWrite;
+//    	String toWrite = "";
+//        byte dataWrite;
+//        
+//    	//Check input
+//    	if(x <= 240 && y <= 64){
+//	    	//Figure out the column's Most significant and least significant nibble + the page to edit.
+//	        column = (byte) x;
+//	        
+//	        columnMSN = (byte) (column >> 4);
+//	        //Prep the nibbles for writing
+//	        columnMSN = (byte) (columnMSN | 16);
+//	        
+//	        columnLSN = (byte) (column & 15);
+//	        
+//	    	page = (byte) (y / 8);
+//	    	//Prep the page for writing
+//	    	pageWrite = (byte) (page | 176);
+//    	} else {
+//    		System.out.println("Something's wrong with your input for setPixel()");
+//    		return;
+//    	}
+//    	
+//    	//Select the column
+//		parent.io.writeBufferedLCD(0, columnMSN);
+//		parent.io.writeBufferedLCD(0, columnLSN);
+//		
+//		//Select the page
+//		parent.io.writeBufferedLCD(0, pageWrite);
+//		
+//    	//Update the screen state
+//		LCD.screenState[x][y] = true;
+//		
+//		//Fetch screen-state which now has the added pixel to be set
+//		for(int i = page * 8 + 7; i >= page * 8; i--){
+//			if(LCD.screenState[x][i]){
+//				toWrite = toWrite.concat("1");
+//			} else {
+//				toWrite = toWrite.concat("0");
+//			}
+//		}
+//		dataWrite = (byte) Integer.parseInt(toWrite, 2);
+//		
+//		//Actually write it to the LCD
+//		parent.io.writeBufferedLCD(1, dataWrite);
+//    }
 
     public void fromBMPFile(File BMPFileName) throws IOException {
         BufferedImage image = ImageIO.read(BMPFileName);
