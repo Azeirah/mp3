@@ -70,7 +70,13 @@ public class Main {
         ScreenElement intro = new ScreenElement(0, 0, rootPath
                 + "/res/images/Intro.bmp");
         lcd.addScreenElement(intro);
-
+        
+        //reset pin, CS pin etc.
+        io.setPin(80,  1);
+        //Assuming 1 = CS1H and CS2L = U2. 0 = CS1L and CS2H = U3 
+        io.setPin(81, 1);
+        lcd.reset();
+        
         System.out.println("Done initializing LCD");
     }
 

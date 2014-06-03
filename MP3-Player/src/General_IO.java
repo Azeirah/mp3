@@ -39,7 +39,6 @@ public class General_IO extends Gpio {
     	
     	//Prepare pins
     	setPin(59, DI);
-    	setPin(81, 1);
     	Util.sleep(0, 140);
     	
     	for(int i = 0; i < 8; i++){
@@ -60,7 +59,6 @@ public class General_IO extends Gpio {
     	for(int i : LCDPins){
     		setPin(i, 0);
     	}
-    	setPin(81, 0);
     	setPin(59, 0);
     	
     }
