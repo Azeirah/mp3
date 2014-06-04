@@ -21,9 +21,12 @@ public class LCD extends ScreenElement {
     public void displayOff() {
     	parent.io.newWriteLCD(0, "00111110");
     }
-    //Rewrite pls
+    
     public void reset() {
-        parent.io.writeBufferedLCD(0, Util.stringToByte("11100010"));
+        parent.io.setPin(80, 0);
+        Util.sleep(0, 1500);
+        parent.io.setPin(80, 1);
+        displayOn();
     }
 
     public void dataWrite(String _data) {

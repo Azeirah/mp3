@@ -33,5 +33,20 @@ public class Util {
 		}
 		return result;
 	}
-   
+    
+    //Turns a byte into a string using the format newLCDWrite accepts ("10101010", "11110000", etc.)
+	public static String byteToString(byte a){
+		byte b;
+		String c = "";
+		for(int i = 7; i >= 0 ; i--){
+			b = (byte) (a >> i);
+			b = (byte) (b & 1);
+			if(b > 0){
+				c = c.concat("1");
+			} else {
+				c = c.concat("0");
+			}
+		}
+		return c;
+	}
 }
