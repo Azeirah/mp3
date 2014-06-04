@@ -23,17 +23,36 @@ public class InterfaceTest {
 
         int rotary;
         while (true) {
-            if (main.anInterface.readButtonLeft())
-                System.out.println("LEFT pressed");
-            if (main.anInterface.readButtonRight())
-                System.out.println("RIGHT pressed");
-            if (main.anInterface.readButtonMiddle())
-                System.out.println("MIDDLE pressed");
-            rotary = main.anInterface.readRotaryDial();
+        	main.anInterface.read();
+//            if (main.anInterface.readButtonLeft())
+//                System.out.println("LEFT pressed");
+//            if (main.anInterface.readButtonRight())
+//                System.out.println("RIGHT pressed");
+//            if (main.anInterface.readButtonMiddle())
+//                System.out.println("MIDDLE pressed");
+            rotary = main.anInterface.getRotaryDialSignal();
             if (rotary == 0)
                 System.out.println("ROTARY DIAL ROTATING LEFT, <--");
             if (rotary == 2)
                 System.out.println("ROTARY DIAL ROTATING RIGHT, -->");
         }
+//        while (true) {
+//        	main.anInterface.read();
+//        	int rotary = main.anInterface.getRotaryDialSignal();
+//        	if (rotary == 0) {
+//        		System.out.println("Rotating dial left");
+//        	} else if (rotary == 2) {
+//        		System.out.println("Rotating dial right");
+//        	}
+//        	if (main.anInterface.isLeftButtonSignal()) {
+//        		System.out.println("Button left pressed");
+//        	}
+//        	if (main.anInterface.isRightButtonSignal()) {
+//        		System.out.println("Button right pressed");
+//        	}
+//        	if (main.anInterface.isMiddleButtonSignal()) {
+//        		System.out.println("Button middle pressed");
+//        	}
+//        }
     }
 }

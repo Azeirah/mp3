@@ -32,8 +32,8 @@ public class Main {
         System.out.println("Test doner kebab");
 //		main.player.setTrackNumber(1);
 //		main.player.playTrackNumber(1);// mp3.Player plays first trackmain
-//		System.out.println("start playing song");
-//		main.decoder.play();
+		System.out.println("start playing song");
+		main.player.start();
     }
 
     private void init_pins() {
@@ -60,6 +60,7 @@ public class Main {
     public void init_interface() {
     	System.out.println("Initialising interface ...");
     	anInterface = new Interface(io);
+//    	anInterface.start();
     	System.out.println("Done initialising interface");
     }
     
@@ -94,20 +95,20 @@ public class Main {
 
     private void init_player() {
         System.out.println("Initializing player ...");
-        player = new Player();
+        player = new Player(decoder, anInterface, 50);
         System.out.println("Done initializing player");
     }
 
     public void initialize() throws IOException {// Initialize all
-        init_path();
+//        init_path();
         init_io();
-        init_pins();
-        //init_lcd();
-        //init_decoder();
-        init_console();
+//        init_pins();
+//        init_lcd();
+        init_decoder();
+//        init_console();
         init_interface();
-        //init_menu();
-        //init_player();
+//        init_menu();
+        init_player();
         System.out.println("----------------------------------------");
         System.out.println("Done initializing everything! :)");
     }
