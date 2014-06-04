@@ -32,6 +32,8 @@ public class Decoder extends Thread {
 
 	private File song;
 	private int bytesPlayed = 0;
+	private int index = 0;
+	private boolean playing = false;
 
 	// right channel volume
 
@@ -40,7 +42,7 @@ public class Decoder extends Thread {
 	public Decoder(Main parent) throws IOException {
 		// sendInstruction();
 		this.parent = parent;
-		setSong("test.mp3");
+		setSong(parent.player.songs.get(index));
 		// byte[] clock = { 0x02, 0x03, -101, -24};
 		// parent.io.writeSCI(freq);
 		// parent.io.writeSCI(clock);
@@ -58,6 +60,19 @@ public class Decoder extends Thread {
 		}
 	}
 
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		if (index > parent.player.songs.size() - 1) {
+			this.index = 0;
+		} else {
+			this.index = index;
+		}
+
+	}
+
 	public void setSong(String songname) {
 		String path = parent.rootPath + "/songs/" + songname;
 		System.out.println("songname = [" + songname + "]");
@@ -73,10 +88,15 @@ public class Decoder extends Thread {
 		}
 	}
 
+	public void stopPlaying() {
+		playing = false;
+	}
+
 	public void play() throws IOException, Exception {
 		byte[] init = { 2, 0, 8, 38 };
 		byte[] clockf = { 2, 3, -101, -24 };
 		byte[] audata = { 2, 5, -84, 69 };
+		playing = true;
 		if (song == null) {
 			throw new Exception("You must select a song before trying to play");
 		}
@@ -88,14 +108,12 @@ public class Decoder extends Thread {
 		parent.io.writeSCI(init);
 		parent.io.writeSCI(clockf);
 		parent.io.writeSCI(audata);
-		parent.io.setVolume(50);// HIERZOOOOOOOO
-		RandomAccessFile audio = new RandomAccessFile(
-				new File("songs/test.mp3"), "r");
+
+		RandomAccessFile audio = new RandomAccessFile(song, "r");
 		System.out.println("The decoder is now playing music");
 		byte[] buffer = new byte[32];
 
-		while (true) {
-			audio.read(buffer);
+		while (audio.read(buffer) != -1 && playing) {
 			while (parent.io.ioread(DREQ) == 0) {
 				// Util.sleep(0, 10);
 				// System.out.println("DREQ is high, waiting for low");
@@ -104,5 +122,7 @@ public class Decoder extends Thread {
 			parent.io.writeSDI(buffer);
 			Util.sleep(1);
 		}
+		audio.close();
+
 	}
 }

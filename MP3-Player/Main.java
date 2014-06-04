@@ -8,7 +8,7 @@ public class Main {
     public General_IO io;
     public String rootPath;
     private Menu menu;
-    private Player player;
+    public Player player;
     private boolean debug = true;
 	public Interface anInterface;
 
@@ -18,18 +18,14 @@ public class Main {
         main.initialize();
         Util.sleep(500, 0);
         System.out.println("Ready to go");
-        main.io.newWriteLCD(0, "10101010");
-        Util.sleep(100, 0);
-        main.io.newWriteLCD(0, "01010101");
-        Util.sleep(100, 0);
-        main.io.newWriteLCD(0, "10000000");
-        Util.sleep(100, 0);
-        main.io.newWriteLCD(0, "11000000");
-        Util.sleep(100, 0);
-        main.io.newWriteLCD(0, "11100000");
-        Util.sleep(100, 0);
-        main.io.newWriteLCD(0, "11110000");
-        System.out.println("Test doner kebab");
+        //main.lcd.setPixel(0, 0);
+        //main.lcd.setPixel(12, 12);
+        //main.lcd.setPixel(63, 63);
+        //main.lcd.setPixel(1, 1);
+        //main.lcd.setPixel(24, 24);
+        //main.lcd.setPixel(55, 3);
+        //main.lcd.setPixel(24, 24);
+        //main.lcd.setPixel(34, 2);
 //		main.player.setTrackNumber(1);
 //		main.player.playTrackNumber(1);// mp3.Player plays first trackmain
 		System.out.println("start playing song");
@@ -68,9 +64,9 @@ public class Main {
         System.out.println("Initializing.LCD ...");
         lcd = new LCD(this);
         System.out.println("Path: " + rootPath + "/res/images/Intro.bmp");
-        ScreenElement intro = new ScreenElement(0, 0, rootPath
+        ScreenElement intro = new ScreenElement(this, 0, 0, rootPath
                 + "/res/images/Intro.bmp");
-        lcd.addScreenElement(intro);
+        //lcd.addScreenElement(intro);
         
         //reset pin, CS pin etc.
         io.setPin(80,  1);
@@ -102,14 +98,16 @@ public class Main {
     private void init_player() {
         System.out.println("Initializing player ...");
         player = new Player(decoder, anInterface, 50);
+        
+        
         System.out.println("Done initializing player");
     }
 
     public void initialize() throws IOException {// Initialize all
-//        init_path();
+        init_path();
         init_io();
-//        init_pins();
-//        init_lcd();
+        init_pins();
+        init_lcd();
         init_decoder();
 //        init_console();
         init_interface();

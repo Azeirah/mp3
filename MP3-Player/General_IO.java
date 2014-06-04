@@ -13,17 +13,16 @@ public class General_IO extends Gpio {
 			setPin(pin.getNumber(), 0);
 		}
 	}
-    
-    //For old display, outdated
-    public void writeLCD(int _A0, boolean _l) {
-        Util.sleep(0, 50);
-        setPin(Pins.LCDA0.getNumber(), _A0);
-        setPin(Pins.LCDSI.getNumber(), _l);
-        setPin(Pins.LCDSCL.getNumber(), true);
-        Util.sleep(0, 50);
-        setPin(Pins.LCDSCL.getNumber(), false);
-    }
 
+	// For old display, outdated
+	public void writeLCD(int _A0, boolean _l) {
+		Util.sleep(1, 0);
+		setPin(Pins.LCDA0.getNumber(), _A0);
+		setPin(Pins.LCDSI.getNumber(), _l);
+		setPin(Pins.LCDSCL.getNumber(), true);
+		Util.sleep(1, 0);
+		setPin(Pins.LCDSCL.getNumber(), false);
+	}
 
 	public void writeBufferedLCD(int _A0, byte _l) {
 		for (int i = 8; i > 0; i--) {
@@ -51,7 +50,7 @@ public class General_IO extends Gpio {
 		// Prepare pins
 		setPin(59, DI);
 		setPin(81, 1);
-		Util.sleep(0, 140);
+		Util.sleep(1, 0);
 
 		for (int i = 0; i < 8; i++) {
 			if (instruction.charAt(7 - i) == '1') {
@@ -61,11 +60,13 @@ public class General_IO extends Gpio {
 			}
 		}
 
+		System.out.println("DI: " + DI + " With instruction " + instruction);
+
 		// Stuff it into the LCD
 		setPin(60, 1);
-		Util.sleep(0, 500);
+		Util.sleep(1, 0);
 		setPin(60, 0);
-		Util.sleep(0, 30);
+		Util.sleep(1, 0);
 
 		// Put pins on low again
 		for (int i : LCDPins) {

@@ -3,15 +3,16 @@ import java.io.IOException;
 public class LCD extends ScreenElement {
 
     //Keeps track of the screen's state and gets updated by setPixel()
-    protected static boolean[][] screenState;
+    public boolean[][] screenState;
     private Main parent;
 
 
     public LCD(Main parent) throws IOException {
-        super(0, 0);
+        super(parent, 0, 0);
         width = 240;
         height = 64;
         this.parent = parent;
+        screenState = new boolean[128][64];
     }
 
     public void displayOn() {

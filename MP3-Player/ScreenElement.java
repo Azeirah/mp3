@@ -19,15 +19,17 @@ public class ScreenElement {
     private Main parent;
     
 
-    protected ScreenElement(int locationX, int locationY) {
+    protected ScreenElement(Main parent, int locationX, int locationY) {
         this.locationX = locationX;
         this.locationY = locationY;
+        this.parent = parent;
     }
 
-    protected ScreenElement(int locationX, int locationY, String _path)
+    protected ScreenElement(Main parent, int locationX, int locationY, String _path)
             throws IOException {
         this.locationX = locationX;
         this.locationY = locationY;
+        this.parent = parent;
         importImage(_path);
     }
 
@@ -118,30 +120,32 @@ public class ScreenElement {
 	      }
 	      
 	      //Select page
+	      System.out.println(pageWrite);
+	      System.out.println(Util.byteToString(pageWrite));
 	      parent.io.newWriteLCD(0, Util.byteToString(pageWrite));
 	      
 	      //Select column
 	      parent.io.newWriteLCD(0, Util.byteToString(columnWrite));
-	      
+
 	      //Update screen state
-	      LCD.screenState[x][y] = true;
+	      parent.lcd.screenState[x][y] = true;
 	      
 	      //Fetch screen-state which now has the added pixel to be set
 	      for(int i = page * 8 + 7; i >= page * 8; i--){
-	    	  if(LCD.screenState[x][i]){
+	    	  if(parent.lcd.screenState[x][i]){
 	    		  toWrite = toWrite.concat("1");
 	    	  } else {
 	    		  toWrite = toWrite.concat("0");
 	    	  }
 	      }
-	      
+	      System.out.println(toWrite);
 	      //Alter CS to write on the right display
 	      if(x < 64){
 	    	  parent.io.setPin(81,  1);
 	      } else {
 	    	  parent.io.setPin(81,  0);
 	      }
-	      
+	      System.out.println("Data written");
 	      //Actually write it to the LCD
 	      parent.io.newWriteLCD(1, toWrite);
 	      
