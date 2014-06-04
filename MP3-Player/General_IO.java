@@ -6,7 +6,6 @@ public class General_IO extends Gpio {
 	RandomAccessFile SDI;
 	int[] LCDPins = { 38, 39, 41, 42, 43, 54, 57, 58 };
 
-<<<<<<< HEAD
 	public General_IO() throws IOException {
 		this.SCI = new RandomAccessFile("/dev/spidev1.0", "rw");
 		this.SDI = new RandomAccessFile("/dev/spidev1.1", "rw");
@@ -14,57 +13,6 @@ public class General_IO extends Gpio {
 			setPin(pin.getNumber(), 0);
 		}
 	}
-=======
-    public void writeBufferedLCD(int _A0, byte _l) {
-        for (int i = 8; i > 0; i--) {
-            writeLCD(_A0, (_l >> i & 1) == 1);
-            System.out.print((_l >> i & 1) == 1);
-        }
-        System.out.println("");
-    }
-    
-    
-    //Writes to the LCD, instruction is in the format of "10101010", "1111000" etc.
-    public void newWriteLCD(int DI, String instruction){
-    	//Validate format
-    	if(instruction.length() != 8){
-    		System.out.println("Incorrect input format for writing to LCD");
-    		return;
-    	}
-    	
-    	for(int i = 0;  i < 7; i++){
-    		if(instruction.charAt(i) != '0' && instruction.charAt(i) != '1'){
-    			System.out.println("Incorrect input format for writing to LCD");
-    		}
-    	}
-  
-    	
-    	
-    	//Prepare pins
-    	setPin(59, DI);
-    	Util.sleep(0, 140);
-    	
-    	for(int i = 0; i < 8; i++){
-    		if(instruction.charAt(7 - i) == '1'){
-    			setPin(LCDPins[i], 1);
-    		} else {
-    			setPin(LCDPins[i], 0);
-    		}
-    	}
-    	
-    	//Stuff it into the LCD
-    	setPin(60, 1);
-    	Util.sleep(0, 500);
-    	setPin(60, 0);
-    	Util.sleep(0, 30);
-    	
-    	//Put pins on low again
-    	for(int i : LCDPins){
-    		setPin(i, 0);
-    	}
-    	setPin(59, 0);
-    	
-    }
     
     //For old display, outdated
     public void writeLCD(int _A0, boolean _l) {
@@ -75,7 +23,7 @@ public class General_IO extends Gpio {
         Util.sleep(0, 50);
         setPin(Pins.LCDSCL.getNumber(), false);
     }
->>>>>>> branch 'dev' of https://github.com/Azeirah/mp3
+
 
 	public void writeBufferedLCD(int _A0, byte _l) {
 		for (int i = 8; i > 0; i--) {
@@ -125,16 +73,6 @@ public class General_IO extends Gpio {
 		}
 		setPin(81, 0);
 		setPin(59, 0);
-	}
-
-	// For old display, outdated
-	public void writeLCD(int _A0, boolean _l) {
-		Util.sleep(0, 50);
-		setPin(Pins.LCDA0.getNumber(), _A0);
-		setPin(Pins.LCDSI.getNumber(), _l);
-		setPin(Pins.LCDSCL.getNumber(), true);
-		Util.sleep(0, 50);
-		setPin(Pins.LCDSCL.getNumber(), false);
 	}
 
 	public void setPin(int pin, int pinState) {
