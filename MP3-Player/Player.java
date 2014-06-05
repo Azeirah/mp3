@@ -69,9 +69,16 @@ public class Player {// everything for playing the music
 		}
 	}
 
+	public void pause(){
+		decoder.pause();
+	}
+	
 	public void next(){
+		System.out.println("WE NEXTSONG NOW, STOP PLAYING");
 		decoder.stopPlaying();
+		System.out.println("SET DER INDEX");
 		decoder.setIndex(decoder.getIndex() + 1);
+		System.out.println("START PLAYING AGAIN, BITTE");
 		try {
 			decoder.play();
 		} catch (IOException e) {

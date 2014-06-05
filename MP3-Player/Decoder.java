@@ -32,8 +32,9 @@ public class Decoder extends Thread {
 
 	private File song;
 	private int bytesPlayed = 0;
-	private int index = 5;
+	private int index = 0;
 	private boolean playing = false;
+	private boolean stopped = true;
 
 	// right channel volume
 
@@ -66,7 +67,7 @@ public class Decoder extends Thread {
 	public void setIndex(int index) {
 		if (index > parent.player.songs.size() - 1) {
 			this.index = 0;
-		} else if(index < 0) {
+		} else if (index < 0) {
 			this.index = parent.player.songs.size() - 1;
 		} else {
 			this.index = index;
@@ -88,8 +89,16 @@ public class Decoder extends Thread {
 		}
 	}
 
-	public void stopPlaying() {
+	public void pause() {
 		playing = false;
+	}
+	
+	public void unpause() {
+		playing = true;
+	}
+	
+	public void stopPlaying() {
+		stopped = true;
 	}
 
 	public void play() throws IOException, Exception {
@@ -97,6 +106,7 @@ public class Decoder extends Thread {
 		byte[] clockf = { 2, 3, -101, -24 };
 		byte[] audata = { 2, 5, -84, 69 };
 		playing = true;
+		stopped = false;
 		setSong(parent.player.songs.get(index));
 		if (song == null) {
 			throw new Exception("You must select a song before trying to play");
@@ -115,16 +125,24 @@ public class Decoder extends Thread {
 		System.out.println("The decoder is now playing music");
 		byte[] buffer = new byte[32];
 
-		while (audio.read(buffer) != -1 && playing) {
-			while (parent.io.ioread(DREQ) == 0) {
-				// Util.sleep(0, 10);
-				// System.out.println("DREQ is high, waiting for low");
+		boolean bufferCompleted = false;
+		while (!stopped) {
+			if (playing && !bufferCompleted) {
+				bufferCompleted = audio.read(buffer) == -1;
+				while (parent.io.ioread(DREQ) == 0) {
+					// Util.sleep(0, 10);
+					// System.out.println("DREQ is high, waiting for low");
+				}
+				bytesPlayed += 32;
+				parent.io.writeSDI(buffer);
+				if (bufferCompleted) {
+					stopped = true;
+				}
 			}
-			bytesPlayed += 32;
-			parent.io.writeSDI(buffer);
 			Util.sleep(1);
 		}
 		audio.close();
 		System.out.println("Stopping playing");
+		parent.player.previous();
 	}
 }
