@@ -32,7 +32,7 @@ public class Decoder extends Thread {
 
 	private File song;
 	private int bytesPlayed = 0;
-	private int index = 0;
+	private int index = 5;
 	private boolean playing = false;
 
 	// right channel volume
@@ -42,7 +42,6 @@ public class Decoder extends Thread {
 	public Decoder(Main parent) throws IOException {
 		// sendInstruction();
 		this.parent = parent;
-		setSong(parent.player.songs.get(index));
 		// byte[] clock = { 0x02, 0x03, -101, -24};
 		// parent.io.writeSCI(freq);
 		// parent.io.writeSCI(clock);
@@ -67,10 +66,11 @@ public class Decoder extends Thread {
 	public void setIndex(int index) {
 		if (index > parent.player.songs.size() - 1) {
 			this.index = 0;
+		} else if(index < 0) {
+			this.index = parent.player.songs.size() - 1;
 		} else {
 			this.index = index;
 		}
-
 	}
 
 	public void setSong(String songname) {
@@ -97,6 +97,7 @@ public class Decoder extends Thread {
 		byte[] clockf = { 2, 3, -101, -24 };
 		byte[] audata = { 2, 5, -84, 69 };
 		playing = true;
+		setSong(parent.player.songs.get(index));
 		if (song == null) {
 			throw new Exception("You must select a song before trying to play");
 		}
@@ -108,6 +109,7 @@ public class Decoder extends Thread {
 		parent.io.writeSCI(init);
 		parent.io.writeSCI(clockf);
 		parent.io.writeSCI(audata);
+		setVolume(200);
 
 		RandomAccessFile audio = new RandomAccessFile(song, "r");
 		System.out.println("The decoder is now playing music");
@@ -123,6 +125,6 @@ public class Decoder extends Thread {
 			Util.sleep(1);
 		}
 		audio.close();
-
+		System.out.println("Stopping playing");
 	}
 }

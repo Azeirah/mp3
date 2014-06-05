@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Player {// everything for playing the music
 	int volume = 200;
@@ -18,19 +20,25 @@ public class Player {// everything for playing the music
 		this.anInterface = anInterface;
 		this.decoder.setVolume(this.volume);
 		indexSongs();
+		decoder.setSong(songs.get(decoder.getIndex()));
 
 	}
 
 	public void indexSongs(){
 		File songsFolder = new File(songsPath);
 		String[] filesInSongs = songsFolder.list();
-		System.out.println("Printing files in songs");
 		for(String str : filesInSongs){
 			if(str.contains("mp3")){
 				songs.add(str);
 			}
 		}
-		
+		Collections.sort(songs, String.CASE_INSENSITIVE_ORDER);
+		System.out.println("Printing songs");
+		System.out.println("|---------------------------|");
+		for(String str : songs){
+			System.out.println("|  " + str);
+		}
+		System.out.println("|---------------------------|");		
 	}
 	
 	public void start() {
@@ -46,11 +54,14 @@ public class Player {// everything for playing the music
 				changeVolume(-volumeStep);
 			}
 			if (anInterface.isLeftButtonSignal()) {
-				changeVolume(volumeStep);
+				System.out.println("Right button signal");
+				//changeVolume(volumeStep);
+				previous();
 			}
 			if (anInterface.isRightButtonSignal()) {
 				System.out.println("Right button signal");
-				changeVolume(-volumeStep);
+				//changeVolume(-volumeStep);
+				next();
 			}
 			// make sure the poor foxg20 doesn't burn out and die a painful
 			// death. (and then reboot)
