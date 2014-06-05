@@ -31,7 +31,6 @@ public class Decoder extends Thread {
 	private byte VOLUME = 0x0B; // When using this: Most significant byte = left
 
 	private File song;
-	private int bytesPlayed = 0;
 	private int index = 0;
 	private boolean playing = false;
 	private boolean stopped = true;
@@ -50,7 +49,9 @@ public class Decoder extends Thread {
 
 	public void run() {
 		try {
-			play();
+			while (true) {
+				play();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,15 +61,24 @@ public class Decoder extends Thread {
 		}
 	}
 
+	public boolean isPlaying() {
+		return playing;
+	}
+
 	public int getIndex() {
 		return index;
 	}
 
 	public void setIndex(int index) {
-		if (index > parent.player.songs.size() - 1) {
+		int size = parent.player.songs.size();
+		System.out.println("size of array is: " + size);
+		System.out.println("index chosen is: " + index);
+		if (index > size - 1) {
+			System.out.println("Starting from beginning of songlist");
 			this.index = 0;
 		} else if (index < 0) {
-			this.index = parent.player.songs.size() - 1;
+			System.out.println("Starting from back of songlist");
+			this.index = size - 1;
 		} else {
 			this.index = index;
 		}
@@ -92,11 +102,11 @@ public class Decoder extends Thread {
 	public void pause() {
 		playing = false;
 	}
-	
+
 	public void unpause() {
 		playing = true;
 	}
-	
+
 	public void stopPlaying() {
 		stopped = true;
 	}
@@ -127,22 +137,22 @@ public class Decoder extends Thread {
 
 		boolean bufferCompleted = false;
 		while (!stopped) {
-			if (playing && !bufferCompleted) {
-				bufferCompleted = audio.read(buffer) == -1;
-				while (parent.io.ioread(DREQ) == 0) {
-					// Util.sleep(0, 10);
-					// System.out.println("DREQ is high, waiting for low");
-				}
-				bytesPlayed += 32;
-				parent.io.writeSDI(buffer);
-				if (bufferCompleted) {
+			if (playing) {
+				if (audio.read(buffer) != -1) {
+					while (Gpio.ioread(DREQ) == 0) {
+						// Util.sleep(0, 10);
+						// System.out.println("DREQ is high, waiting for low");
+					}
+					parent.io.writeSDI(buffer);
+				} else {
 					stopped = true;
 				}
+			} else {
+				System.out.println("I am paused");
+				Util.sleep(200);
 			}
-			Util.sleep(1);
 		}
 		audio.close();
 		System.out.println("Stopping playing");
-		parent.player.previous();
 	}
 }

@@ -3,15 +3,10 @@
  */
 public class Interface /*extends Thread*/ {
     private General_IO io;
-    private boolean leftButtonSignal = false,
-    				rightButtonSignal = false,
-    				middleButtonSignal = false;
-    private int rotaryDialSignal;
     private boolean initial = false;
-    private boolean leftSignalReady = false,
-    				rightSignalReady = false,
-    				middleSignalReady = false,
-    				rotarySignalReady = false;
+    private boolean lastLeftButton = false,
+    				lastRightButton = false,
+    				lastMiddleButton = false;
 //    
 //    public void run() {
 //    	while (true) {
@@ -26,38 +21,6 @@ public class Interface /*extends Thread*/ {
 //    	super("hardware buttons interface thread");
 //    	System.out.println("thread: " + this.getName() + ". has started");
     }
-    
-    public boolean isLeftButtonSignal() {
-    	if (leftSignalReady) {
-    		leftSignalReady = false;
-    		return leftButtonSignal;
-    	}
-		return false;
-	}
-
-	public boolean isRightButtonSignal() {
-		if (rightSignalReady) {
-			rightSignalReady = false;
-			return rightButtonSignal;
-		}
-		return false;
-	}
-
-	public boolean isMiddleButtonSignal() {
-		if (middleSignalReady) {
-			middleSignalReady = false;
-			return middleButtonSignal;
-		}
-		return false;
-	}
-
-	public int getRotaryDialSignal() {
-		if (rotarySignalReady) {
-			rotarySignalReady = false;
-			return rotaryDialSignal;
-		}
-		return 1;
-	}
 
 	public Interface(General_IO io) {
         this.io = io;
@@ -67,7 +30,6 @@ public class Interface /*extends Thread*/ {
         boolean result[] = new boolean[3];
         for (int i = 0; i < 3; i++) {
             result[i] = Gpio.ioread(pin) == 1;
-            
             Util.sleep(0, 12);
         }
         for (boolean res : result) {
@@ -79,33 +41,25 @@ public class Interface /*extends Thread*/ {
         }
         return true;
     }
-    
-    public void read() {
-    	// read from all inputs
-    	// read a button, set the signal to not previous signal && readButton()
-    	// This means that you will get one true when readButton becomes true
-    	leftButtonSignal = readButtonLeft();
-    	rightButtonSignal = readButtonRight();
-    	middleButtonSignal = readButtonMiddle();
-    	// example:
-    	// signal:     ____|-|___________________|-|___readButtonMiddle
-    	// readButton: ____|---------------|_____|--|
-    	// rotary dial already returns the correct value when changes occur, so we can just
-    	// read it and copy it to signal.
-    	rotaryDialSignal = readRotaryDial();
-    	leftSignalReady = true;
-    	rightSignalReady = true;
-    	middleSignalReady = true;
-    	rotarySignalReady = true;
-    }
 
     public boolean readButtonLeft() {
-//        System.out.println("button left is: " + (Gpio.ioread(Pins.DrukknopL.getNumber()) == 1));
-    	return (!debounce(Pins.DrukknopR.getNumber())) && debounce(Pins.DrukknopL.getNumber());
+    	boolean state = (!debounce(Pins.DrukknopR.getNumber())) && debounce(Pins.DrukknopL.getNumber()); 
+    	if (state != lastLeftButton) {
+    		lastLeftButton = state;
+    		if (state) return true;
+    	}
+    	lastLeftButton = state;
+    	return false;
     }
 
     public boolean readButtonRight() {
-        return (!debounce(Pins.DrukknopL.getNumber())) && debounce(Pins.DrukknopR.getNumber());
+    	boolean state = (!debounce(Pins.DrukknopL.getNumber())) && debounce(Pins.DrukknopR.getNumber());
+    	if (state != lastRightButton) {
+    		lastRightButton = state;
+    		if (state) return true;
+    	}
+    	lastRightButton = state;
+    	return false;
     }
 
     /**
@@ -142,8 +96,8 @@ public class Interface /*extends Thread*/ {
     	//   4: return 2 als B
     	// 5: return 1
         boolean A, B;
-        A = io.ioread(Pins.RDA.getNumber()) == 1;
-    	B = io.ioread(Pins.RDB.getNumber()) == 1;
+        A = Gpio.ioread(Pins.RDA.getNumber()) == 1;
+    	B = Gpio.ioread(Pins.RDB.getNumber()) == 1;
     	    	
     	if (A && B) {
     		initial = true;
@@ -151,8 +105,8 @@ public class Interface /*extends Thread*/ {
     		initial = false;
     	}
         
-        A = io.ioread(Pins.RDA.getNumber()) == 1;
-        B = io.ioread(Pins.RDB.getNumber()) == 1;
+        A = Gpio.ioread(Pins.RDA.getNumber()) == 1;
+        B = Gpio.ioread(Pins.RDB.getNumber()) == 1;
 //        Util.sleep(8, 0);
         if (A != B) {
         	if (A != initial) {
@@ -166,6 +120,12 @@ public class Interface /*extends Thread*/ {
     }
 
     public boolean readButtonMiddle() {
-        return debounce(Pins.DrukknopL.getNumber()) && debounce(Pins.DrukknopR.getNumber());
+    	boolean state = debounce(Pins.DrukknopL.getNumber()) && debounce(Pins.DrukknopR.getNumber()); 
+        if (state != lastMiddleButton) {
+        	lastMiddleButton = state;
+        	if (state) return state;
+        }
+        lastMiddleButton = state;
+    	return false;
     }
 }

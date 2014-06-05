@@ -21,7 +21,6 @@ public class Player {// everything for playing the music
 		this.decoder.setVolume(this.volume);
 		indexSongs();
 		decoder.setSong(songs.get(decoder.getIndex()));
-
 	}
 
 	public void indexSongs(){
@@ -46,62 +45,44 @@ public class Player {// everything for playing the music
 		decoder.start();
 		System.out.println("Starting player playing song");
 		while (true) {
-			anInterface.read();
-			rotary = anInterface.getRotaryDialSignal();
+			rotary = anInterface.readRotaryDial();
 			if (rotary == 2) {
 				changeVolume(volumeStep);
 			} else if (rotary == 0) {
 				changeVolume(-volumeStep);
 			}
-			if (anInterface.isLeftButtonSignal()) {
-				System.out.println("Right button signal");
+			if (anInterface.readButtonLeft()) {
+				System.out.println("Left button signal");
 				//changeVolume(volumeStep);
 				previous();
 			}
-			if (anInterface.isRightButtonSignal()) {
+			if (anInterface.readButtonRight()) {
 				System.out.println("Right button signal");
 				//changeVolume(-volumeStep);
 				next();
+			}
+			if (anInterface.readButtonMiddle()) {
+				System.out.println("Middle button signal");
+				if (decoder.isPlaying()) {
+					decoder.pause();
+				} else {
+					decoder.unpause();
+				}
 			}
 			// make sure the poor foxg20 doesn't burn out and die a painful
 			// death. (and then reboot)
 			Util.sleep(2);
 		}
 	}
-
-	public void pause(){
-		decoder.pause();
-	}
 	
 	public void next(){
-		System.out.println("WE NEXTSONG NOW, STOP PLAYING");
 		decoder.stopPlaying();
-		System.out.println("SET DER INDEX");
 		decoder.setIndex(decoder.getIndex() + 1);
-		System.out.println("START PLAYING AGAIN, BITTE");
-		try {
-			decoder.play();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public void previous(){
 		decoder.stopPlaying();
 		decoder.setIndex(decoder.getIndex() - 1);
-		try {
-			decoder.play();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public void playTrackNumber(int _N) {// plays track number _N
@@ -121,10 +102,6 @@ public class Player {// everything for playing the music
 			}
 		}
 		System.out.println("That song is not in the /songs/ folder!");
-	}
-
-	public void setTrackNumber(int _N) {
-
 	}
 
 	public void changeVolume(int volumeSteps) {

@@ -98,16 +98,14 @@ public class Main {
     private void init_player() {
         System.out.println("Initializing player ...");
         player = new Player(decoder, anInterface, 50);
-        
-        
         System.out.println("Done initializing player");
     }
 
     public void initialize() throws IOException {// Initialize all
         init_path();
         init_io();
-        init_pins();
-        init_lcd();
+//        init_pins();
+//        init_lcd();
         init_decoder();
 //        init_console();
         init_interface();
