@@ -1,5 +1,7 @@
 import java.io.IOException;
 
+import org.blinkenlights.jid3.ID3Exception;
+
 public class Main {
     public static Console console;
     // Declare Classes
@@ -18,14 +20,14 @@ public class Main {
         main.initialize();
         Util.sleep(500, 0);
         System.out.println("Ready to go");
-        //main.lcd.setPixel(0, 0);
-        //main.lcd.setPixel(12, 12);
-        //main.lcd.setPixel(63, 63);
-        //main.lcd.setPixel(1, 1);
-        //main.lcd.setPixel(24, 24);
-        //main.lcd.setPixel(55, 3);
-        //main.lcd.setPixel(24, 24);
-        //main.lcd.setPixel(34, 2);
+        main.lcd.setPixel(0, 0);
+        main.lcd.setPixel(12, 12);
+        main.lcd.setPixel(63, 63);
+        main.lcd.setPixel(1, 1);
+        main.lcd.setPixel(24, 24);
+        main.lcd.setPixel(55, 3);
+        main.lcd.setPixel(24, 24);
+        main.lcd.setPixel(34, 2);
 //		main.player.setTrackNumber(1);
 //		main.player.playTrackNumber(1);// mp3.Player plays first trackmain
 		System.out.println("start playing song");
@@ -95,17 +97,17 @@ public class Main {
         System.out.println("Done initializing console");
     }
 
-    private void init_player() {
+    private void init_player() throws ID3Exception {
         System.out.println("Initializing player ...");
         player = new Player(decoder, anInterface, 50);
         System.out.println("Done initializing player");
     }
 
-    public void initialize() throws IOException {// Initialize all
+    public void initialize() throws IOException, ID3Exception {// Initialize all
         init_path();
         init_io();
-//        init_pins();
-//        init_lcd();
+        init_pins();
+        init_lcd();
         init_decoder();
 //        init_console();
         init_interface();

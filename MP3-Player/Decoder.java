@@ -3,6 +3,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import org.blinkenlights.jid3.ID3Exception;
+
 public class Decoder extends Thread {
 	// channel volume, least significant byte =
 	private Main parent;
@@ -34,7 +36,8 @@ public class Decoder extends Thread {
 	private int index = 0;
 	private boolean playing = false;
 	private boolean stopped = true;
-
+	private String title = "";
+	private String artist = "";
 	// right channel volume
 
 	// 0x0000 = LOUD
@@ -84,9 +87,14 @@ public class Decoder extends Thread {
 		}
 	}
 
-	public void setSong(String songname) {
+	public void setSong(String songname) throws ID3Exception {
 		String path = parent.rootPath + "/songs/" + songname;
+		Meta meta = new Meta(path);
+		title = meta.getTitle();
+		artist = meta.getArtist();
 		System.out.println("songname = [" + songname + "]");
+		System.out.println("title = [" + title + "]");
+		System.out.println("artist = [" + artist + "]");
 		song = new File(path);
 	}
 

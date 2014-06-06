@@ -120,11 +120,11 @@ public class ScreenElement {
 	      }
 	      
 	      //Select page
-	      System.out.println(pageWrite);
-	      System.out.println(Util.byteToString(pageWrite));
+	      System.out.print("Writing page: ");
 	      parent.io.newWriteLCD(0, Util.byteToString(pageWrite));
 	      
 	      //Select column
+	      System.out.print("Writing column: ");
 	      parent.io.newWriteLCD(0, Util.byteToString(columnWrite));
 
 	      //Update screen state
@@ -138,15 +138,14 @@ public class ScreenElement {
 	    		  toWrite = toWrite.concat("0");
 	    	  }
 	      }
-	      System.out.println(toWrite);
 	      //Alter CS to write on the right display
 	      if(x < 64){
 	    	  parent.io.setPin(81,  1);
 	      } else {
 	    	  parent.io.setPin(81,  0);
 	      }
-	      System.out.println("Data written");
 	      //Actually write it to the LCD
+	      System.out.print("Writing data: ");
 	      parent.io.newWriteLCD(1, toWrite);
 	      
 	      //Put CS back on it's default (1)

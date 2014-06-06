@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.blinkenlights.jid3.ID3Exception;
+
 public class Player {// everything for playing the music
 	int volume = 200;
 	Decoder decoder;
@@ -14,7 +16,7 @@ public class Player {// everything for playing the music
 	//Holds all song paths
 	ArrayList<String> songs = new ArrayList<String>();
 	
-	public Player(Decoder decoder, Interface anInterface, int volume) {
+	public Player(Decoder decoder, Interface anInterface, int volume) throws ID3Exception {
 		this.volume = volume;
 		this.decoder = decoder;
 		this.anInterface = anInterface;
@@ -85,7 +87,7 @@ public class Player {// everything for playing the music
 		decoder.setIndex(decoder.getIndex() - 1);
 	}
 	
-	public void playTrackNumber(int _N) {// plays track number _N
+	public void playTrackNumber(int _N) throws ID3Exception {// plays track number _N
 		if(_N < songs.size()){
 			decoder.setSong(songs.get(_N - 1));
 			System.out.println("Song set to: " + songs.get(_N - 1) );
@@ -94,7 +96,7 @@ public class Player {// everything for playing the music
 		}
 	}
 
-	public void playTrackName(String _name) {// plays track number N
+	public void playTrackName(String _name) throws ID3Exception {// plays track number N
 		for(String str : songs){
 			if(str.equals(_name)){
 				decoder.setSong(str);

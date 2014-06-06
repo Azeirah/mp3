@@ -56,36 +56,55 @@ public class Meta {
 	public Meta(String _path) throws ID3Exception {
 		File oSourceFile = new File(_path);
 		MediaFile oMediaFile = new MP3File(oSourceFile);
+		System.out.println("Dit is de artiest: " + oMediaFile.getID3V2Tag().getArtist());
+		System.out.println("Dit is de titel: " + oMediaFile.getID3V2Tag().getTitle());
 		ID3Tag[] aoID3Tag = oMediaFile.getTags();
+//		System.out.println(aoID3Tag[1]);
+		
+		// V OVERBODIG?
+		
 		for (int i = 0; i < aoID3Tag.length; i++) {
-			if (aoID3Tag[i] instanceof ID3V1_0Tag) {
-				ID3V1_0Tag oID3V1_0Tag = (ID3V1_0Tag) aoID3Tag[i];
-				if (oID3V1_0Tag.getTitle().length() > 0) {
-					setTitle(oID3V1_0Tag.getTitle());
-				} else {
-					setTitle("Title Unknown");
-				}
-				if (oID3V1_0Tag.getAlbum().length() > 0) {
-					setAlbum(oID3V1_0Tag.getAlbum());
-				} else {
-					setAlbum("Album Unknown");
-				}
-				if (oID3V1_0Tag.getArtist().length() > 0) {
-					setArtist(oID3V1_0Tag.getArtist());
-				} else {
-					setArtist("Artist Unknown");
-				}
-				if (oID3V1_0Tag.getYear().length() > 0) {
-					setYear(oID3V1_0Tag.getYear());
-				} else {
-					setYear("Year Unknown");
-				}
-				if (oID3V1_0Tag.getGenre() != null) {
-					setGenre(oID3V1_0Tag.getGenre());
-				} else {
-					setYear("Genre Unknown");
-				}
+//			System.out.println(aoID3Tag[i]);
+			String tag = aoID3Tag[i].toString();
+			if (tag.startsWith("Song")) {
+				setTitle(tag.substring(tag.indexOf("= [") + 3, tag.length() - 1));
 			}
+			else if (tag.startsWith("Art")) {
+				System.out.println("FUCKKKKKKKKKKKK");
+				setAlbum(tag.substring(tag.indexOf("= [") + 3, tag.length() - 1));
+			}
+//			if (aoID3Tag[i] instanceof ID3V1_0Tag) {
+//				ID3V1_0Tag oID3V1_0Tag = (ID3V1_0Tag) aoID3Tag[i];
+//				if (oID3V1_0Tag.getTitle().length() > 0&&oID3V1_0Tag.getTitle()!=null) {
+//					setTitle(oID3V1_0Tag.getTitle());
+//				} else {
+//					setTitle("Title Unknown");
+//				}
+//				if (oID3V1_0Tag.getAlbum().length() > 0 && oID3V1_0Tag.getAlbum() != null) {
+//					setAlbum(oID3V1_0Tag.getAlbum());
+//				} else {
+//					setAlbum("Album Unknown");
+//				}
+//				if (oID3V1_0Tag.getArtist().length() > 0 && oID3V1_0Tag.getArtist() != null) {
+//					setArtist(oID3V1_0Tag.getArtist());
+//				} else {
+//					setArtist("Artist Unknown");
+//				}
+//				if (oID3V1_0Tag.getYear().length() > 0) {
+//					setYear(oID3V1_0Tag.getYear());
+//				} else {
+//					setYear("Year Unknown");
+//				}
+//				if (oID3V1_0Tag.getGenre() != null) {
+//					setGenre(oID3V1_0Tag.getGenre());
+//				} else {
+//					setYear("Genre Unknown");
+//				}
+//			}
+			setTitle(oMediaFile.getID3V2Tag().getTitle());
+			setArtist(oMediaFile.getID3V2Tag().getArtist());
+//			System.out.println("Dit is de artiest: " + oMediaFile.getID3V2Tag().getArtist());
+//			System.out.println("Dit is de titel: " + oMediaFile.getID3V2Tag().getTitle());
 		}
 	}
 
