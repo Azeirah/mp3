@@ -90,8 +90,18 @@ public class Decoder extends Thread {
 	public void setSong(String songname) throws ID3Exception {
 		String path = parent.rootPath + "/songs/" + songname;
 		Meta meta = new Meta(path);
-		title = meta.getTitle();
-		artist = meta.getArtist();
+		if(meta.getTitle() != null){
+			title = meta.getTitle();
+		} else {
+			title = "Unknown title";
+		}
+		
+		if(meta.getAlbum() != null){
+			artist = meta.getArtist();
+		} else {
+			artist = "Unknown artist";
+		}
+		
 		System.out.println("songname = [" + songname + "]");
 		System.out.println("title = [" + title + "]");
 		System.out.println("artist = [" + artist + "]");

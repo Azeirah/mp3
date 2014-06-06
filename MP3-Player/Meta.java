@@ -56,8 +56,6 @@ public class Meta {
 	public Meta(String _path) throws ID3Exception {
 		File oSourceFile = new File(_path);
 		MediaFile oMediaFile = new MP3File(oSourceFile);
-		System.out.println("Dit is de artiest: " + oMediaFile.getID3V2Tag().getArtist());
-		System.out.println("Dit is de titel: " + oMediaFile.getID3V2Tag().getTitle());
 		ID3Tag[] aoID3Tag = oMediaFile.getTags();
 //		System.out.println(aoID3Tag[1]);
 		
@@ -101,8 +99,19 @@ public class Meta {
 //					setYear("Genre Unknown");
 //				}
 //			}
-			setTitle(oMediaFile.getID3V2Tag().getTitle());
-			setArtist(oMediaFile.getID3V2Tag().getArtist());
+			if(oMediaFile.getID3V2Tag().getTitle() != null && !oMediaFile.getID3V2Tag().getTitle().equals("null") ){
+				setTitle(oMediaFile.getID3V2Tag().getTitle());
+				System.out.println("Hoi");
+			} else {
+				System.out.println("Niet hoi");
+				setTitle("Unknown");
+			}
+			if(oMediaFile.getID3V2Tag().getArtist() != null && !oMediaFile.getID3V2Tag().getArtist().equals("null")){
+				setArtist(oMediaFile.getID3V2Tag().getArtist());
+			} else {
+				setArtist("Unknown");
+			}
+			
 //			System.out.println("Dit is de artiest: " + oMediaFile.getID3V2Tag().getArtist());
 //			System.out.println("Dit is de titel: " + oMediaFile.getID3V2Tag().getTitle());
 		}
