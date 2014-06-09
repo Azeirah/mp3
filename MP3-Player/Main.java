@@ -18,20 +18,13 @@ public class Main {
         Main main = new Main();
         System.out.println("**STARTING UP**");
         main.initialize();
-        Util.sleep(500, 0);
+        Util.sleep(3000, 0);
         System.out.println("Ready to go");
-        main.lcd.setPixel(0, 0);
-        main.lcd.setPixel(12, 12);
-        main.lcd.setPixel(63, 63);
-        main.lcd.setPixel(1, 1);
-        main.lcd.setPixel(24, 24);
-        main.lcd.setPixel(55, 3);
-        main.lcd.setPixel(24, 24);
-        main.lcd.setPixel(34, 2);
+        main.lcd.test();
 //		main.player.setTrackNumber(1);
 //		main.player.playTrackNumber(1);// mp3.Player plays first trackmain
 		System.out.println("start playing song");
-		main.player.start();
+		//main.player.start();
     }
 
     private void init_pins() {
@@ -39,7 +32,7 @@ public class Main {
         int[] pins = {38, 39, 41, 42, 43, 54, 57, 58, 59, 60, 80, 81, 84, 85,
                 94, 95};
         for (int pin : pins) {
-            Gpio.iowrite(pin, 0);
+            io.setPin(pin, 0);
         }
         System.out.println("Pins set to LOW");
     }
@@ -47,7 +40,7 @@ public class Main {
     public void init_io() throws IOException {
         System.out.println("Initializing IO ...");
         io = new General_IO();
-        io.ioinit();
+
         System.out.println("Done initializing IO");
     }
 
@@ -65,16 +58,8 @@ public class Main {
     private void init_lcd() throws IOException {
         System.out.println("Initializing.LCD ...");
         lcd = new LCD(this);
-        System.out.println("Path: " + rootPath + "/res/images/Intro.bmp");
-        ScreenElement intro = new ScreenElement(this, 0, 0, rootPath
-                + "/res/images/Intro.bmp");
-        //lcd.addScreenElement(intro);
-        
-        //reset pin, CS pin etc.
-        io.setPin(80,  1);
-        //Assuming 1 = CS1H and CS2L = U2. 0 = CS1L and CS2H = U3 
-        io.setPin(81, 1);
-        lcd.reset();
+ 
+        lcd.init(true);
         
         System.out.println("Done initializing LCD");
     }
@@ -108,11 +93,11 @@ public class Main {
         init_io();
         init_pins();
         init_lcd();
-        init_decoder();
+//        init_decoder();
 //        init_console();
-        init_interface();
+//        init_interface();
 //        init_menu();
-        init_player();
+//        init_player();
         System.out.println("----------------------------------------");
         System.out.println("Done initializing everything! :)");
     }
