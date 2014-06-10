@@ -7,10 +7,8 @@ public class Main {
     public Decoder decoder;
     public General_IO io;
     public String rootPath;
-    private Menu menu;
     public Player player;
-    private boolean debug = true;
-	public Interface anInterface;
+    public Interface anInterface;
 
     public static void main(String[] args) throws IOException, Exception {
         Main main = new Main();
@@ -18,18 +16,12 @@ public class Main {
         main.initialize();
         Util.sleep(500, 0);
         System.out.println("Ready to go");
-        //main.lcd.setPixel(0, 0);
-        //main.lcd.setPixel(12, 12);
-        //main.lcd.setPixel(63, 63);
-        //main.lcd.setPixel(1, 1);
-        //main.lcd.setPixel(24, 24);
-        //main.lcd.setPixel(55, 3);
-        //main.lcd.setPixel(24, 24);
-        //main.lcd.setPixel(34, 2);
-//		main.player.setTrackNumber(1);
-//		main.player.playTrackNumber(1);// mp3.Player plays first trackmain
-		System.out.println("start playing song");
-		main.player.start();
+        main.lcd.writePause();
+        main.lcd.writePlay();
+//      main.player.setTrackNumber(1);
+//      main.player.playTrackNumber(1);// mp3.Player plays first trackmain
+        System.out.println("start playing song");
+        main.player.start();
     }
 
     private void init_pins() {
@@ -37,7 +29,7 @@ public class Main {
         int[] pins = {38, 39, 41, 42, 43, 54, 57, 58, 59, 60, 80, 81, 84, 85,
                 94, 95};
         for (int pin : pins) {
-            Gpio.iowrite(pin, 0);
+            io.setPin(pin, 0);
         }
         System.out.println("Pins set to LOW");
     }
@@ -54,26 +46,17 @@ public class Main {
     }
 
     public void init_interface() {
-    	System.out.println("Initialising interface ...");
-    	anInterface = new Interface(io);
-//    	anInterface.start();
-    	System.out.println("Done initialising interface");
+        System.out.println("Initialising interface ...");
+        anInterface = new Interface(io);
+//      anInterface.start();
+        System.out.println("Done initialising interface");
     }
     
     private void init_lcd() throws IOException {
         System.out.println("Initializing.LCD ...");
         lcd = new LCD(this);
-        System.out.println("Path: " + rootPath + "/res/images/Intro.bmp");
-        ScreenElement intro = new ScreenElement(this, 0, 0, rootPath
-                + "/res/images/Intro.bmp");
-        //lcd.addScreenElement(intro);
         
-        //reset pin, CS pin etc.
-        io.setPin(80,  1);
-        //Assuming 1 = CS1H and CS2L = U2. 0 = CS1L and CS2H = U3 
-        io.setPin(81, 1);
-        lcd.reset();
-        
+        lcd.init(true);
         System.out.println("Done initializing LCD");
     }
 
@@ -81,18 +64,6 @@ public class Main {
         System.out.println("Initialing decoder ...");
         decoder = new Decoder(this);
         System.out.println("Done initializing decoder");
-    }
-
-    private void init_menu() {
-        System.out.println("Initializing menu ...");
-        menu = new Menu();
-        System.out.println("Done initializing menu");
-    }
-
-    private void init_console() {
-        System.out.println("Initializing console ...");
-        console = new Console();
-        System.out.println("Done initializing console");
     }
 
     private void init_player() {
@@ -104,12 +75,10 @@ public class Main {
     public void initialize() throws IOException {// Initialize all
         init_path();
         init_io();
-//        init_pins();
-//        init_lcd();
+        init_pins();
+        init_lcd();
         init_decoder();
-//        init_console();
         init_interface();
-//        init_menu();
         init_player();
         System.out.println("----------------------------------------");
         System.out.println("Done initializing everything! :)");

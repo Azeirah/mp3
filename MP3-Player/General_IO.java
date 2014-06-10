@@ -5,6 +5,7 @@ public class General_IO extends Gpio {
 	RandomAccessFile SCI;
 	RandomAccessFile SDI;
 	int[] LCDPins = { 38, 39, 41, 42, 43, 54, 57, 58 };
+	int[] LCDPins4Bits = {43, 54, 57, 58 };
 
 	public General_IO() throws IOException {
 		this.SCI = new RandomAccessFile("/dev/spidev1.0", "rw");
@@ -16,14 +17,14 @@ public class General_IO extends Gpio {
 
 	// For old display, outdated
 	public void writeLCD(int _A0, boolean _l) {
-		Util.sleep(1, 0);
+		Util.sleep(5, 0);
 		setPin(Pins.LCDA0.getNumber(), _A0);
 		setPin(Pins.LCDSI.getNumber(), _l);
 		setPin(Pins.LCDSCL.getNumber(), true);
-		Util.sleep(1, 0);
+		Util.sleep(5, 0);
 		setPin(Pins.LCDSCL.getNumber(), false);
 	}
-
+	//For old display, outdated
 	public void writeBufferedLCD(int _A0, byte _l) {
 		for (int i = 8; i > 0; i--) {
 			writeLCD(_A0, (_l >> i & 1) == 1);
@@ -32,9 +33,9 @@ public class General_IO extends Gpio {
 		System.out.println("");
 	}
 
-	// Writes to the LCD, instruction is in the format of "10101010", "1111000"
-	// etc.
-	public void newWriteLCD(int DI, String instruction) {
+	// Writes to the LCD, instruction is in the format of "10101010", "1111000" etc.
+	//For current display
+	public void newWriteLCD(int RS, String instruction) {
 		// Validate format
 		if (instruction.length() != 8) {
 			System.out.println("Incorrect input format for writing to LCD");
@@ -47,11 +48,11 @@ public class General_IO extends Gpio {
 			}
 		}
 
+		
 		// Prepare pins
-		setPin(59, DI);
-		setPin(81, 1);
-		Util.sleep(1, 0);
-
+		setPin(59, RS); // <-- RS pin
+		Util.sleep(5, 0);		
+		
 		for (int i = 0; i < 8; i++) {
 			if (instruction.charAt(7 - i) == '1') {
 				setPin(LCDPins[i], 1);
@@ -60,22 +61,66 @@ public class General_IO extends Gpio {
 			}
 		}
 
-		System.out.println("DI: " + DI + " With instruction " + instruction);
+		System.out.println("RS: " + RS + " With instruction " + instruction);
 
+		
 		// Stuff it into the LCD
-		setPin(60, 1);
-		Util.sleep(1, 0);
+		setPin(60, 1); // <-- Enable pin
+		Util.sleep(5, 0);
 		setPin(60, 0);
-		Util.sleep(1, 0);
+		Util.sleep(5, 0);
 
-		// Put pins on low again
+		
+		// Put all DB pins on low again
 		for (int i : LCDPins) {
 			setPin(i, 0);
 		}
-		setPin(81, 0);
-		setPin(59, 0);
+		setPin(59, 0); // <-- RS pin
 	}
 
+	public void writeLCD4Bits(int RS, String instruction){
+		// Validate format
+		if (instruction.length() != 4) {
+			System.out.println("Incorrect input format for writing to LCD");
+			return;
+		}
+
+		for (int i = 0; i < 3; i++) {
+			if (instruction.charAt(i) != '0' && instruction.charAt(i) != '1') {
+				System.out.println("Incorrect input format for writing to LCD");
+			}
+		}
+
+		
+		// Prepare pins
+		setPin(59, RS); // <-- RS pin
+		Util.sleep(5, 0);		
+		
+		for (int i = 0; i < 4; i++) {
+			if (instruction.charAt(3 - i) == '1') {
+				setPin(LCDPins[i], 1);
+			} else {
+				setPin(LCDPins[i], 0);
+			}
+		}
+
+		System.out.println("RS: " + RS + " With instruction " + instruction);
+
+		
+		// Stuff it into the LCD
+		setPin(60, 1); // <-- Enable pin
+		Util.sleep(5, 0);
+		setPin(60, 0);
+		Util.sleep(5, 0);
+
+		
+		// Put all DB pins on low again
+		for (int i : LCDPins) {
+			setPin(i, 0);
+		}
+		setPin(59, 0); // <-- RS pin
+	}
+	
 	public void setPin(int pin, int pinState) {
 		iowrite(pin, pinState);
 	}
