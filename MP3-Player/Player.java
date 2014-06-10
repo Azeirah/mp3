@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Player {// everything for playing the music
-	int volume;
+	Main parent;
+	public int volume;
 	Decoder decoder;
 	Interface anInterface;
 	final int volumeStep = 2;
@@ -13,7 +14,8 @@ public class Player {// everything for playing the music
 	ArrayList<String> songs = new ArrayList<String>();
 	long time;
 
-	public Player(Decoder decoder, Interface anInterface, int volume) {
+	public Player(Decoder decoder, Interface anInterface, int volume, Main parent) {
+		this.parent = parent;
 		this.volume = volume;
 		this.decoder = decoder;
 		this.anInterface = anInterface;
@@ -71,6 +73,7 @@ public class Player {// everything for playing the music
 			// make sure the poor foxg20 doesn't burn out and die a painful
 			// death. (and then reboot)
 			Util.sleep(1);
+			
 		}
 	}
 

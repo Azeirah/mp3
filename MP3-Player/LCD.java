@@ -3,7 +3,7 @@ import java.io.IOException;
 public class LCD {
 
     private Main parent;
-
+    public char[] firstLine;
 
     public LCD(Main parent) throws IOException {
         this.parent = parent;
@@ -32,6 +32,36 @@ public class LCD {
 	    		writeChar(str.charAt(i));
 	    	}
     	}
+    }
+    //Draws the static chars which won't be changed
+    public void staticChars(){
+    	//Left arrow
+    	parent.io.newWriteLCD(0, "11000000");
+    	Util.sleep(5);
+    	parent.io.newWriteLCD(1, "01111111");
+    	Util.sleep(5);
+    	
+    	//Colon for time
+    	parent.io.newWriteLCD(0, "11000100");
+    	Util.sleep(5);
+    	parent.io.newWriteLCD(1, "001101010");
+    	Util.sleep(5);
+    	
+    	//Percentage
+    	parent.io.newWriteLCD(0, "11001101");
+    	Util.sleep(5);
+    	parent.io.newWriteLCD(1, "00100101");
+    	Util.sleep(5);
+    	
+    	//Right arrow
+    	parent.io.newWriteLCD(0, "11001111");
+    	Util.sleep(5);
+    	parent.io.newWriteLCD(1, "01111110");
+    	Util.sleep(5);
+    	
+    	goHome();
+    	Util.sleep(5);
+    	
     }
     
     public void init4Bit(boolean cursor){
@@ -153,12 +183,20 @@ public class LCD {
     }
     
     public void writePlay(){
+       	parent.io.newWriteLCD(0, "11001000");  
+    	Util.sleep(5);
     	parent.io.newWriteLCD(1, "00000000");
+    	Util.sleep(5);
+    	goHome();
     	Util.sleep(5);
     }
     
     public void writePause(){
+       	parent.io.newWriteLCD(0, "11001000");  
+    	Util.sleep(5);  
     	parent.io.newWriteLCD(1, "00000001");
+    	Util.sleep(5);
+      	goHome();
     	Util.sleep(5);
     }
     
@@ -167,10 +205,66 @@ public class LCD {
     	Util.sleep(5);
     }
     
+    public void writeVolume(){
+    	//Getting the values to write (seperating them from 1 number)
+    	int volumePercentage = ((parent.player.volume - 90) / 140) * 100;
+    	int firstNum = volumePercentage % 10;
+    	int middleNum = volumePercentage / 10;
+    	if(middleNum  > 9){
+    		middleNum = 0;
+    	}
+    	int lastNum = volumePercentage / 100;
+    	
+    	String writeSecondNum = "";
+    	String writeLastNum = "";
+    	
+    	String writeFirstNum = Util.byteToString((byte) ((byte) firstNum & 30));
+    	if(middleNum == 0 && lastNum < 1){
+    		//Empty char
+    		writeSecondNum = "00100000";
+    	} else {
+    		writeSecondNum = Util.byteToString((byte) ((byte) middleNum & 30));
+    	}
+    	
+    	if(lastNum == 0){
+    		writeLastNum = "00100000";
+    	} else {
+    		writeLastNum = Util.byteToString((byte) ((byte) lastNum & 30));
+    	}
+    	
+    	//First num
+    	parent.io.newWriteLCD(0, "11001100");
+    	parent.io.newWriteLCD(1, writeFirstNum);
+    	
+    	//Second num
+    	parent.io.newWriteLCD(0, "11001011");
+		parent.io.newWriteLCD(1, writeSecondNum);
+		
+    	//Last num
+    	parent.io.newWriteLCD(0, "11001010");
+		parent.io.newWriteLCD(1, writeLastNum);
+    }
+    
     public void dataWrite(String data) {
         parent.io.newWriteLCD(1, data);
     	Util.sleep(5);
     }
-    
-    
+    //This will update the screen, to be placed in the main loop
+    public void update(){
+    	//Draw title and artist
+    	
+    	//Draw play/pause thing
+    	if(parent.decoder.isPlaying()){
+    		writePlay();
+    	} else {
+    		writePause();
+    	}
+    	//Draw remainder of song
+    	
+    	//Draw volume percentage
+    	writeVolume();
+    	
+    	
+    	
+    }
 }

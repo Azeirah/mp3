@@ -68,7 +68,7 @@ public class Main {
 
 	private void init_player() {
 		System.out.println("Initializing player ...");
-		player = new Player(decoder, anInterface, 180);
+		player = new Player(decoder, anInterface, 180, this);
 		System.out.println("Done initializing player");
 	}
 
