@@ -28,7 +28,7 @@ public class LCD {
     	
     	//Write it all (everything after the 16th character gets cut off due to limitations of the screen. Maybe make some scrolling stuff later?)
     	if(str.length() <= 64){
-	    	for(int i = 0; i < str.length() - 1; i++){
+	    	for(int i = 0; i <= str.length() - 1; i++){
 	    		writeChar(str.charAt(i));
 	    	}
     	}

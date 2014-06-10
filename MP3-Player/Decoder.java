@@ -38,6 +38,7 @@ public class Decoder extends Thread {
 	private boolean stopped = true;
 	private String title = "";
 	private String artist = "";
+
 	// right channel volume
 
 	// 0x0000 = LOUD
@@ -90,18 +91,18 @@ public class Decoder extends Thread {
 	public void setSong(String songname) throws ID3Exception {
 		String path = parent.rootPath + "/songs/" + songname;
 		Meta meta = new Meta(path);
-		if(meta.getTitle() != null){
+		if (meta.getTitle() != null) {
 			title = meta.getTitle();
 		} else {
 			title = "Unknown title";
 		}
-		
-		if(meta.getAlbum() != null){
+
+		if (meta.getAlbum() != null) {
 			artist = meta.getArtist();
 		} else {
 			artist = "Unknown artist";
 		}
-		
+
 		System.out.println("songname = [" + songname + "]");
 		System.out.println("title = [" + title + "]");
 		System.out.println("artist = [" + artist + "]");
@@ -136,6 +137,7 @@ public class Decoder extends Thread {
 		playing = true;
 		stopped = false;
 		setSong(parent.player.songs.get(index));
+		parent.lcd.writeFirstLine(title);
 		if (song == null) {
 			throw new Exception("You must select a song before trying to play");
 		}
@@ -151,6 +153,7 @@ public class Decoder extends Thread {
 
 		RandomAccessFile audio = new RandomAccessFile(song, "r");
 		System.out.println("The decoder is now playing music");
+
 		byte[] buffer = new byte[32];
 
 		boolean bufferCompleted = false;

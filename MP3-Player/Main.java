@@ -20,11 +20,9 @@ public class Main {
         main.initialize();
         Util.sleep(3000, 0);
         System.out.println("Ready to go");
-        main.lcd.test();
-//		main.player.setTrackNumber(1);
-//		main.player.playTrackNumber(1);// mp3.Player plays first trackmain
+		main.player.playTrackNumber(1); //Sets track number to 1
 		System.out.println("start playing song");
-		//main.player.start();
+		main.player.start();
     }
 
     private void init_pins() {
@@ -93,11 +91,11 @@ public class Main {
         init_io();
         init_pins();
         init_lcd();
-//        init_decoder();
+        init_decoder();
 //        init_console();
-//        init_interface();
+        init_interface();
 //        init_menu();
-//        init_player();
+        init_player();
         System.out.println("----------------------------------------");
         System.out.println("Done initializing everything! :)");
     }
