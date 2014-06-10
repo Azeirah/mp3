@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Player {// everything for playing the music
-	int volume = 200;
+	int volume;
 	Decoder decoder;
 	Interface anInterface;
 	final int volumeStep = 2;
@@ -17,7 +17,6 @@ public class Player {// everything for playing the music
 		this.volume = volume;
 		this.decoder = decoder;
 		this.anInterface = anInterface;
-		this.decoder.setVolume(this.volume);
 		indexSongs();
 		decoder.setSong(songs.get(decoder.getIndex()));
 	}
@@ -67,6 +66,7 @@ public class Player {// everything for playing the music
 				} else {
 					decoder.unpause();
 				}
+				Util.sleep(200);
 			}
 			// make sure the poor foxg20 doesn't burn out and die a painful
 			// death. (and then reboot)
@@ -105,10 +105,12 @@ public class Player {// everything for playing the music
 
 	public void changeVolume(int volumeSteps) {
 		volume += volumeSteps;
-		if (volume > 220)
-			volume = 220;
-		if (volume < 170)
-			volume = 170;
+		System.out.println("volume was: " + volume);
+		if (volume > 230)
+			volume = 230;
+		if (volume < 90)
+			volume = 90;
+
 		decoder.setVolume(volume);
 		System.out.println("changing volume by " + volumeSteps
 				+ " the volume is now " + volume);
