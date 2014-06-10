@@ -51,12 +51,13 @@ public class Decoder extends Thread {
 		try {
 			while (true) {
 				play();
+				Util.sleep(500);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block046
 			e.printStackTrace();
 		}
 	}
@@ -121,7 +122,7 @@ public class Decoder extends Thread {
 		if (song == null) {
 			throw new Exception("You must select a song before trying to play");
 		}
-		while (parent.io.ioread(DREQ) == 0) {
+		while (Gpio.ioread(DREQ) == 0) {
 			// wait 10 ns to give other threads the opportunity to do stuff
 			// Util.sleep(0, 10);
 			// System.out.println("DREQ is high, waiting for low");
@@ -129,13 +130,11 @@ public class Decoder extends Thread {
 		parent.io.writeSCI(init);
 		parent.io.writeSCI(clockf);
 		parent.io.writeSCI(audata);
-		setVolume(200);
 
 		RandomAccessFile audio = new RandomAccessFile(song, "r");
 		System.out.println("The decoder is now playing music");
 		byte[] buffer = new byte[32];
 
-		boolean bufferCompleted = false;
 		while (!stopped) {
 			if (playing) {
 				if (audio.read(buffer) != -1) {

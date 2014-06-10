@@ -71,7 +71,7 @@ public class Player {// everything for playing the music
 			}
 			// make sure the poor foxg20 doesn't burn out and die a painful
 			// death. (and then reboot)
-			Util.sleep(2);
+			Util.sleep(1);
 		}
 	}
 	
