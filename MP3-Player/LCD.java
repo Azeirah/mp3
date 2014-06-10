@@ -99,17 +99,77 @@ public class LCD {
     		parent.io.newWriteLCD(0, "00001100");
     	}
     	
+    	initCChars();
+    	goHome();
     	
     	System.out.println("LCD display init done");
     	//READY TO GO
     }
     
+    public void initCChars(){
+    	//Set CGRAM to 0
+    	parent.io.newWriteLCD(0, "01000000");
+    	//PLAY CHARACTER
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00010000");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011000");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011100");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011110");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011110");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011100");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011000");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00010000");
+    	Util.sleep(5);
+    	//Pause char
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00000000");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011011");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011011");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011011");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011011");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011011");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00011011");
+    	Util.sleep(5);
+       	parent.io.newWriteLCD(1, "00000000");
+    	Util.sleep(5);
+    }
+    
+    public void goHome(){
+    	parent.io.newWriteLCD(0, "00000010");
+    	Util.sleep(5);
+    }
+    
+    public void writePlay(){
+    	parent.io.newWriteLCD(1, "00000000");
+    	Util.sleep(5);
+    }
+    
+    public void writePause(){
+    	parent.io.newWriteLCD(1, "00000001");
+    	Util.sleep(5);
+    }
+    
     public void clear(){
     	parent.io.newWriteLCD(0, "00000001");
+    	Util.sleep(5);
     }
     
     public void dataWrite(String data) {
         parent.io.newWriteLCD(1, data);
+    	Util.sleep(5);
     }
     
     

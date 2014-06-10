@@ -137,7 +137,7 @@ public class Decoder extends Thread {
 		playing = true;
 		stopped = false;
 		setSong(parent.player.songs.get(index));
-		parent.lcd.writeFirstLine(title);
+		//parent.lcd.writeFirstLine(title);
 		if (song == null) {
 			throw new Exception("You must select a song before trying to play");
 		}

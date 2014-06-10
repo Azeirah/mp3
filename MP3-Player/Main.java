@@ -20,6 +20,10 @@ public class Main {
         main.initialize();
         Util.sleep(3000, 0);
         System.out.println("Ready to go");
+        
+        main.lcd.writePlay();
+        main.lcd.writePause();
+        
 		main.player.playTrackNumber(1); //Sets track number to 1
 		System.out.println("start playing song");
 		main.player.start();
