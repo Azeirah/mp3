@@ -39,8 +39,8 @@ public class Decoder extends Thread {
     private int index = 0;
     private boolean playing = false;
     private boolean stopped = true;
-    private String title = "";
-    private String artist = "";
+    public String title = "";
+    public String artist = "";
 
     // right channel volume
 
@@ -125,6 +125,13 @@ public class Decoder extends Thread {
 	        System.out.println("songname = [" + songname + "]");
 	        System.out.println("title = [" + title + "]");
 	        System.out.println("artist = [" + artist + "]");
+	        //Gives this to the LCD's firstLine
+	        String firstLine = title + "-" + artist;
+	        for(int i = 0; i < firstLine.length(); i++){
+	        	parent.lcd.firstLine[i] = firstLine.charAt(i);
+	        }
+	        
+	        
 		} else {
 			System.out.println("Could not open audio file as meta");
 		}
@@ -160,7 +167,7 @@ public class Decoder extends Thread {
         stopped = false;
         setSong(parent.player.songs.get(index));
         //Writes stuff on the LCD
-        parent.lcd.writeFirstLine(title + " - " + artist);
+
         if (song == null) {
             throw new Exception("You must select a song before trying to play");
         }

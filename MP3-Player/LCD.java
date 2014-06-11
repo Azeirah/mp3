@@ -1,12 +1,15 @@
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class LCD {
 
     private Main parent;
-    public char[] firstLine;
-
+    public char[] firstLine = new char[100];
+    private long lastShift;
+    private int offset = 0;
     public LCD(Main parent) throws IOException {
         this.parent = parent;
+        lastShift = System.currentTimeMillis();
     }
     
     public void test(){
@@ -22,15 +25,33 @@ public class LCD {
     }
     
     //Writes something on the first line of the display, used to display the title
-    public void writeFirstLine(String str){
+    public void writeFirstLine(){
+    	String firstLineStr = parent.decoder.title + "-" + parent.decoder.artist;
     	//Returns the cursor home
     	parent.io.newWriteLCD(0, "00000010");
     	
-    	//Write it all (everything after the 16th character gets cut off due to limitations of the screen. Maybe make some scrolling stuff later?)
-    	if(str.length() <= 64){
-	    	for(int i = 0; i <= str.length() - 1; i++){
-	    		writeChar(str.charAt(i));
-	    	}
+    	//Checks if a second has passed from the last shift
+    	if(System.currentTimeMillis() > lastShift + 1000){
+    		//OMG, DRAW THE DAMN STUFF
+    		
+    		offset++;
+    		//Will reset the offset if need be
+    		if(firstLineStr.length() - offset < 16){
+    			offset = 0;
+    		}
+    		
+    		//Draws on the first line
+    		for(int i = offset; i < offset + 16; i++){
+    			//Little note, uninitialised spots in a char array are a blank space instead of null
+    			if(firstLine[i] == ' '){
+    				break;
+    			}
+    			writeChar(firstLine[i]);		
+    		}
+    		
+    		//Set the new lastShift
+    		lastShift = System.currentTimeMillis();
+    		
     	}
     }
     //Draws the static chars which won't be changed
@@ -184,20 +205,20 @@ public class LCD {
     
     public void writePlay(){
        	parent.io.newWriteLCD(0, "11001000");  
-    	Util.sleep(5);
+    	Util.sleep(1);
     	parent.io.newWriteLCD(1, "00000000");
-    	Util.sleep(5);
+    	Util.sleep(1);
     	goHome();
-    	Util.sleep(5);
+    	Util.sleep(1);
     }
     
     public void writePause(){
        	parent.io.newWriteLCD(0, "11001000");  
-    	Util.sleep(5);  
+    	Util.sleep(1);  
     	parent.io.newWriteLCD(1, "00000001");
-    	Util.sleep(5);
+    	Util.sleep(1);
       	goHome();
-    	Util.sleep(5);
+    	Util.sleep(1);
     }
     
     public void clear(){
@@ -235,14 +256,15 @@ public class LCD {
     	//First num
     	parent.io.newWriteLCD(0, "11001100");
     	parent.io.newWriteLCD(1, writeFirstNum);
-    	
+    	Util.sleep(1);
     	//Second num
     	parent.io.newWriteLCD(0, "11001011");
 		parent.io.newWriteLCD(1, writeSecondNum);
-		
+    	Util.sleep(1);
     	//Last num
     	parent.io.newWriteLCD(0, "11001010");
 		parent.io.newWriteLCD(1, writeLastNum);
+    	Util.sleep(1);
     }
     
     public void dataWrite(String data) {
@@ -251,8 +273,10 @@ public class LCD {
     }
     //This will update the screen, to be placed in the main loop
     public void update(){
-    	//Draw title and artist
+
     	
+    	//Draw title and artist, will only draw a second after it last drew itself
+    	writeFirstLine();
     	//Draw play/pause thing
     	if(parent.decoder.isPlaying()){
     		writePlay();
@@ -260,6 +284,7 @@ public class LCD {
     		writePause();
     	}
     	//Draw remainder of song
+    	
     	
     	//Draw volume percentage
     	writeVolume();
