@@ -61,8 +61,6 @@ public class General_IO extends Gpio {
 			}
 		}
 
-		System.out.println("RS: " + RS + " With instruction " + instruction);
-
 		
 		// Stuff it into the LCD
 		setPin(60, 1); // <-- Enable pin

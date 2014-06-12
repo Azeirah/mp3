@@ -16,8 +16,6 @@ public class Main {
 		main.initialize();
 		Util.sleep(500, 0);
 		System.out.println("Ready to go");
-		main.lcd.writePause();
-		main.lcd.writePlay();
 		// main.player.setTrackNumber(1);
 		// main.player.playTrackNumber(1);// mp3.Player plays first trackmain
 		System.out.println("start playing song");
@@ -56,7 +54,7 @@ public class Main {
 		System.out.println("Initializing.LCD ...");
 		lcd = new LCD(this);
 
-		lcd.init(true);
+		lcd.init(false);
 		System.out.println("Done initializing LCD");
 	}
 

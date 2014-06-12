@@ -13,6 +13,7 @@ public class Player {// everything for playing the music
 	// Holds all song paths
 	ArrayList<String> songs = new ArrayList<String>();
 	long time;
+	long lastLCDUpdate;
 
 	public Player(Decoder decoder, Interface anInterface, int volume, Main parent) {
 		this.parent = parent;
@@ -70,6 +71,12 @@ public class Player {// everything for playing the music
 				}
 				Util.sleep(200);
 			}
+			//Updates 5 times a second
+			if(System.currentTimeMillis() > lastLCDUpdate + 200){
+				parent.lcd.update();
+				lastLCDUpdate = System.currentTimeMillis();
+			}
+			
 			// make sure the poor foxg20 doesn't burn out and die a painful
 			// death. (and then reboot)
 			Util.sleep(1);

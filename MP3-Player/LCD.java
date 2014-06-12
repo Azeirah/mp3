@@ -10,6 +10,9 @@ public class LCD {
     public LCD(Main parent) throws IOException {
         this.parent = parent;
         lastShift = System.currentTimeMillis();
+        for(int i = 0; i < 100; i++){
+        	firstLine[i] = '\n';
+        }
     }
     
     public void test(){
@@ -43,7 +46,7 @@ public class LCD {
     		//Draws on the first line
     		for(int i = offset; i < offset + 16; i++){
     			//Little note, uninitialised spots in a char array are a blank space instead of null
-    			if(firstLine[i] == ' '){
+    			if(firstLine[i] == '\n'){
     				break;
     			}
     			writeChar(firstLine[i]);		
@@ -65,7 +68,7 @@ public class LCD {
     	//Colon for time
     	parent.io.newWriteLCD(0, "11000100");
     	Util.sleep(5);
-    	parent.io.newWriteLCD(1, "001101010");
+    	parent.io.newWriteLCD(1, "00111010");
     	Util.sleep(5);
     	
     	//Percentage
@@ -153,6 +156,8 @@ public class LCD {
     	initCChars();
     	goHome();
     	
+    	staticChars();
+    	
     	System.out.println("LCD display init done");
     	//READY TO GO
     }
@@ -228,7 +233,7 @@ public class LCD {
     
     public void writeVolume(){
     	//Getting the values to write (seperating them from 1 number)
-    	int volumePercentage = ((parent.player.volume - 90) / 140) * 100;
+    	int volumePercentage = (int) (((parent.player.volume - 90) / 1.4));
     	int firstNum = volumePercentage % 10;
     	int middleNum = volumePercentage / 10;
     	if(middleNum  > 9){
@@ -238,19 +243,18 @@ public class LCD {
     	
     	String writeSecondNum = "";
     	String writeLastNum = "";
-    	
-    	String writeFirstNum = Util.byteToString((byte) ((byte) firstNum & 30));
+    	String writeFirstNum = Util.byteToString((byte) ((byte) firstNum | 48));
     	if(middleNum == 0 && lastNum < 1){
     		//Empty char
     		writeSecondNum = "00100000";
     	} else {
-    		writeSecondNum = Util.byteToString((byte) ((byte) middleNum & 30));
+    		writeSecondNum = Util.byteToString((byte) ((byte) middleNum | 48));
     	}
     	
     	if(lastNum == 0){
     		writeLastNum = "00100000";
     	} else {
-    		writeLastNum = Util.byteToString((byte) ((byte) lastNum & 30));
+    		writeLastNum = Util.byteToString((byte) ((byte) lastNum | 48));
     	}
     	
     	//First num
