@@ -6,10 +6,13 @@ public class LCD {
     private Main parent;
     public char[] firstLine = new char[100];
     private long lastShift;
+    private long lastRemainderDraw;
+    public int lastVolumeWritten;
     private int offset = 0;
     public LCD(Main parent) throws IOException {
         this.parent = parent;
         lastShift = System.currentTimeMillis();
+        lastRemainderDraw = System.currentTimeMillis();
         for(int i = 0; i < 100; i++){
         	firstLine[i] = '\n';
         }
@@ -27,61 +30,20 @@ public class LCD {
     	Util.sleep(5);
     }
     
-    //Writes something on the first line of the display, used to display the title
-    public void writeFirstLine(){
-    	String firstLineStr = parent.decoder.title + "-" + parent.decoder.artist;
-    	//Returns the cursor home
-    	parent.io.newWriteLCD(0, "00000010");
-    	
-    	//Checks if a second has passed from the last shift
-    	if(System.currentTimeMillis() > lastShift + 1000){
-    		//OMG, DRAW THE DAMN STUFF
-    		
-    		offset++;
-    		//Will reset the offset if need be
-    		if(firstLineStr.length() - offset < 16){
-    			offset = 0;
-    		}
-    		
-    		//Draws on the first line
-    		for(int i = offset; i < offset + 16; i++){
-    			//Little note, uninitialised spots in a char array are a blank space instead of null
-    			if(firstLine[i] == '\n'){
-    				break;
-    			}
-    			writeChar(firstLine[i]);		
-    		}
-    		
-    		//Set the new lastShift
-    		lastShift = System.currentTimeMillis();
-    		
-    	}
-    }
+ 
     //Draws the static chars which won't be changed
     public void staticChars(){
     	//Left arrow
     	parent.io.newWriteLCD(0, "11000000");
-    	Util.sleep(5);
     	parent.io.newWriteLCD(1, "01111111");
-    	Util.sleep(5);
-    	
-    	//Colon for time
-    	parent.io.newWriteLCD(0, "11000100");
-    	Util.sleep(5);
-    	parent.io.newWriteLCD(1, "00111010");
-    	Util.sleep(5);
     	
     	//Percentage
     	parent.io.newWriteLCD(0, "11001101");
-    	Util.sleep(5);
     	parent.io.newWriteLCD(1, "00100101");
-    	Util.sleep(5);
     	
     	//Right arrow
     	parent.io.newWriteLCD(0, "11001111");
-    	Util.sleep(5);
     	parent.io.newWriteLCD(1, "01111110");
-    	Util.sleep(5);
     	
     	goHome();
     	Util.sleep(5);
@@ -133,16 +95,12 @@ public class LCD {
     	Util.sleep(5);
     	//Actual function set
     	parent.io.newWriteLCD(0, "00111000");
-    	Util.sleep(5);
     	//Display off
     	parent.io.newWriteLCD(0, "00001000");
-    	Util.sleep(5);
     	//Clear
     	parent.io.newWriteLCD(0, "00000001");
-    	Util.sleep(5);
     	//Entry mode set
     	parent.io.newWriteLCD(0, "00000110");
-    	Util.sleep(5);
     	
     	//Turn on LCD
     	if(cursor){
@@ -231,45 +189,27 @@ public class LCD {
     	Util.sleep(5);
     }
     
-    public void writeVolume(){
-    	//Getting the values to write (seperating them from 1 number)
-    	int volumePercentage = (int) (((parent.player.volume - 90) / 1.4));
-    	int firstNum = volumePercentage % 10;
-    	int middleNum = volumePercentage / 10;
-    	if(middleNum  > 9){
-    		middleNum = 0;
-    	}
-    	int lastNum = volumePercentage / 100;
+    public void writeRemainder(){
     	
-    	String writeSecondNum = "";
-    	String writeLastNum = "";
-    	String writeFirstNum = Util.byteToString((byte) ((byte) firstNum | 48));
-    	if(middleNum == 0 && lastNum < 1){
-    		//Empty char
-    		writeSecondNum = "00100000";
-    	} else {
-    		writeSecondNum = Util.byteToString((byte) ((byte) middleNum | 48));
+    	if(System.currentTimeMillis() > lastRemainderDraw + 1000){     	
+        	long progress = (System.currentTimeMillis() - parent.decoder.startTime) / 1000;
+        	//Remainder in seconds(!!!)
+        	long remainder = (parent.decoder.duration - progress);
+        	String writeRemains = Meta.formatTime(remainder);
+        	//Go to the correct spot
+        	parent.io.newWriteLCD(0, "11000010");
+        	for(int i = 0; i < 5; i++){
+        		writeChar(writeRemains.charAt(i));
+        	}
+        	goHome();
+        	
+        	lastRemainderDraw = System.currentTimeMillis();
     	}
-    	
-    	if(lastNum == 0){
-    		writeLastNum = "00100000";
-    	} else {
-    		writeLastNum = Util.byteToString((byte) ((byte) lastNum | 48));
-    	}
-    	
-    	//First num
-    	parent.io.newWriteLCD(0, "11001100");
-    	parent.io.newWriteLCD(1, writeFirstNum);
-    	Util.sleep(1);
-    	//Second num
-    	parent.io.newWriteLCD(0, "11001011");
-		parent.io.newWriteLCD(1, writeSecondNum);
-    	Util.sleep(1);
-    	//Last num
-    	parent.io.newWriteLCD(0, "11001010");
-		parent.io.newWriteLCD(1, writeLastNum);
-    	Util.sleep(1);
+
     }
+    
+    
+
     
     public void dataWrite(String data) {
         parent.io.newWriteLCD(1, data);
@@ -288,12 +228,87 @@ public class LCD {
     		writePause();
     	}
     	//Draw remainder of song
-    	
+    	if(parent.decoder.counting){
+        	writeRemainder();
+    	}
+
     	
     	//Draw volume percentage
-    	writeVolume();
+    	writeVolume();  	
     	
+    }
+    
+    //Writes the volume on the 2nd line of the screen
+    public void writeVolume(){
+    	if(lastVolumeWritten != (int) (((parent.player.volume - 90) / 1.4))){
+	    	//Getting the values to write (seperating them from 1 number)
+	    	int volumePercentage = (int) (((parent.player.volume - 90) / 1.4));
+	    	int firstNum = volumePercentage % 10;
+	    	int middleNum = volumePercentage / 10;
+	    	if(middleNum  > 9){
+	    		middleNum = 0;
+	    	}
+	    	int lastNum = volumePercentage / 100;
+	    	
+	    	String writeSecondNum = "";
+	    	String writeLastNum = "";
+	    	String writeFirstNum = Util.byteToString((byte) ((byte) firstNum | 48));
+	    	if(middleNum == 0 && lastNum < 1){
+	    		//Empty char
+	    		writeSecondNum = "00100000";
+	    	} else {
+	    		writeSecondNum = Util.byteToString((byte) ((byte) middleNum | 48));
+	    	}
+	    	
+	    	if(lastNum == 0){
+	    		writeLastNum = "00100000";
+	    	} else {
+	    		writeLastNum = Util.byteToString((byte) ((byte) lastNum | 48));
+	    	}
+	    	
+	    	//First num
+	    	parent.io.newWriteLCD(0, "11001100");
+	    	parent.io.newWriteLCD(1, writeFirstNum);
+	    	//Second num
+	    	parent.io.newWriteLCD(0, "11001011");
+			parent.io.newWriteLCD(1, writeSecondNum);
+	    	//Last num
+	    	parent.io.newWriteLCD(0, "11001010");
+			parent.io.newWriteLCD(1, writeLastNum);
+			
+			lastVolumeWritten = (int) (((parent.player.volume - 90) / 1.4));
+    	}
     	
+    }
+
+    //Writes something on the first line of the display, used to display the title
+    public void writeFirstLine(){
+    	String firstLineStr = parent.decoder.title + "-" + parent.decoder.artist;
+    	//Returns the cursor home
+    	parent.io.newWriteLCD(0, "00000010");
     	
+    	//Checks if a second has passed from the last shift
+    	if(System.currentTimeMillis() > lastShift + 750){
+    		//OMG, DRAW THE DAMN STUFF
+    		
+    		offset++;
+    		//Will reset the offset if need be
+    		if(firstLineStr.length() - offset < 16){
+    			offset = 0;
+    		}
+    		
+    		//Draws on the first line
+    		for(int i = offset; i < offset + 16; i++){
+    			//Little note, uninitialised spots in a char array are a blank space instead of null
+    			if(firstLine[i] == '\n'){
+    				break;
+    			}
+    			writeChar(firstLine[i]);		
+    		}
+    		
+    		//Set the new lastShift
+    		lastShift = System.currentTimeMillis();
+    		
+    	}
     }
 }

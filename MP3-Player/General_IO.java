@@ -51,7 +51,7 @@ public class General_IO extends Gpio {
 		
 		// Prepare pins
 		setPin(59, RS); // <-- RS pin
-		Util.sleep(5, 0);		
+		Util.sleep(1, 0);		
 		
 		for (int i = 0; i < 8; i++) {
 			if (instruction.charAt(7 - i) == '1') {
@@ -66,7 +66,7 @@ public class General_IO extends Gpio {
 		setPin(60, 1); // <-- Enable pin
 		Util.sleep(5, 0);
 		setPin(60, 0);
-		Util.sleep(5, 0);
+		Util.sleep(1, 0);
 
 		
 		// Put all DB pins on low again

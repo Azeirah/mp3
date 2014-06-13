@@ -39,8 +39,11 @@ public class Decoder extends Thread {
     private int index = 0;
     private boolean playing = false;
     private boolean stopped = true;
+    public boolean counting = false;
     public String title = "";
     public String artist = "";
+    public long duration = 0;
+    public long startTime = 0;
 
     // right channel volume
 
@@ -121,7 +124,9 @@ public class Decoder extends Thread {
 	        } else {
 	            artist = "Unknown artist";
 	        }
-
+	        
+	        duration = meta.getLengthInSeconds();
+			System.out.println("duration = [" + duration + "]");
 	        System.out.println("songname = [" + songname + "]");
 	        System.out.println("title = [" + title + "]");
 	        System.out.println("artist = [" + artist + "]");
@@ -130,8 +135,6 @@ public class Decoder extends Thread {
 	        for(int i = 0; i < firstLine.length(); i++){
 	        	parent.lcd.firstLine[i] = firstLine.charAt(i);
 	        }
-	        
-	        
 		} else {
 			System.out.println("Could not open audio file as meta");
 		}
@@ -157,6 +160,7 @@ public class Decoder extends Thread {
 
     public void stopPlaying() {
         stopped = true;
+        counting = false;
     }
 
     public void play() throws IOException, Exception {
@@ -182,6 +186,8 @@ public class Decoder extends Thread {
 
         RandomAccessFile audio = new RandomAccessFile(song, "r");
         System.out.println("The decoder is now playing music");
+        counting = true;
+        startTime = System.currentTimeMillis();
         byte[] buffer = new byte[32];
 
         while (!stopped) {
@@ -194,6 +200,7 @@ public class Decoder extends Thread {
                     parent.io.writeSDI(buffer);
                 } else {
                     stopped = true;
+                    counting = false;
                 }
             } else {
                 System.out.println("I am paused");

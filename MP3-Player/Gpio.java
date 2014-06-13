@@ -1,4 +1,4 @@
-public class Gpio {
+ public class Gpio {
     public static native int ioinit();
 
     public static native int iowrite(int a, int v);

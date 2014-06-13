@@ -7,7 +7,7 @@ public class Player {// everything for playing the music
 	public int volume;
 	Decoder decoder;
 	Interface anInterface;
-	final int volumeStep = 2;
+	final int volumeStep = 4;
 	String rootPath = System.getProperty("user.dir");
 	String songsPath = rootPath + "/songs/";
 	// Holds all song paths
@@ -69,13 +69,13 @@ public class Player {// everything for playing the music
 				} else {
 					decoder.unpause();
 				}
-				Util.sleep(200);
+				Util.sleep(50);
 			}
 			//Updates 5 times a second
-			if(System.currentTimeMillis() > lastLCDUpdate + 200){
-				parent.lcd.update();
-				lastLCDUpdate = System.currentTimeMillis();
-			}
+//			if(System.currentTimeMillis() > lastLCDUpdate + 200){
+//				parent.lcd.update();
+//				lastLCDUpdate = System.currentTimeMillis();
+//			}
 			
 			// make sure the poor foxg20 doesn't burn out and die a painful
 			// death. (and then reboot)

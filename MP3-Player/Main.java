@@ -14,7 +14,6 @@ public class Main {
 		Main main = new Main();
 		System.out.println("**STARTING UP**");
 		main.initialize();
-		Util.sleep(500, 0);
 		System.out.println("Ready to go");
 		// main.player.setTrackNumber(1);
 		// main.player.playTrackNumber(1);// mp3.Player plays first trackmain
