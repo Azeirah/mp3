@@ -54,6 +54,10 @@ public class Main {
 		lcd = new LCD(this);
 
 		lcd.init(false);
+		lcd.welkomScherm();
+		Util.sleep(4000);
+		lcd.clear();
+		lcd.staticChars();
 		System.out.println("Done initializing LCD");
 	}
 

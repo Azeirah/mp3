@@ -44,6 +44,7 @@ public class Player {// everything for playing the music
 	public void start() {
 		int rotary;
 		decoder.start();
+		parent.lcd.start();
 		System.out.println("Starting player playing song");
 		while (true) {
 			rotary = anInterface.readRotaryDial();

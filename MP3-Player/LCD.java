@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class LCD {
+public class LCD extends Thread{
 
     private Main parent;
     public char[] firstLine = new char[100];
@@ -9,6 +9,7 @@ public class LCD {
     private long lastRemainderDraw;
     public int lastVolumeWritten;
     private int offset = 0;
+    
     public LCD(Main parent) throws IOException {
         this.parent = parent;
         lastShift = System.currentTimeMillis();
@@ -16,6 +17,27 @@ public class LCD {
         for(int i = 0; i < 100; i++){
         	firstLine[i] = '\n';
         }
+    }
+    
+    public void run(){
+    	while(true){
+    		update();
+    		Util.sleep(200);
+    	}
+    	
+    }
+    
+    public void welkomScherm(){
+    	goHome();
+    	String a = "MP3 SPELER";
+    	String b = "42ES04C";
+    	for(int i = 0; i < 10; i++){
+    		writeChar(a.charAt(i));
+    	}
+    	parent.io.newWriteLCD(0, "11000000");
+    	for(int i = 0; i < 7; i++){
+    		writeChar(b.charAt(i));
+    	}
     }
     
     public void test(){
@@ -33,6 +55,9 @@ public class LCD {
  
     //Draws the static chars which won't be changed
     public void staticChars(){
+    	initCChars();
+    	goHome();
+    	
     	//Left arrow
     	parent.io.newWriteLCD(0, "11000000");
     	parent.io.newWriteLCD(1, "01111111");
@@ -109,12 +134,8 @@ public class LCD {
     	} else {
     		//No cursor
     		parent.io.newWriteLCD(0, "00001100");
-    	}
-    	
-    	initCChars();
-    	goHome();
-    	
-    	staticChars();
+    	}   	
+
     	
     	System.out.println("LCD display init done");
     	//READY TO GO

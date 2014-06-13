@@ -209,5 +209,6 @@ public class Decoder extends Thread {
         }
         audio.close();
         System.out.println("Stopping playing");
+        parent.player.next();
     }
 }
