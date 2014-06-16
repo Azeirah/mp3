@@ -37,13 +37,15 @@ public class Decoder extends Thread {
 
     private File song;
     private int index = 0;
-    private boolean playing = false;
+    public boolean playing = false;
     private boolean stopped = true;
     public boolean counting = false;
     public String title = "";
     public String artist = "";
     public long duration = 0;
     public long startTime = 0;
+    public long pauseTime = 0;
+    public long extraTime = 0;
 
     // right channel volume
 
@@ -151,10 +153,14 @@ public class Decoder extends Thread {
     }
 
     public void pause() {
+    	pauseTime = System.currentTimeMillis();
+    	
         playing = false;
     }
 
     public void unpause() {
+    	extraTime = System.currentTimeMillis() - pauseTime;
+    	startTime = startTime + extraTime;
         playing = true;
     }
 

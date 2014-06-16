@@ -249,7 +249,7 @@ public class LCD extends Thread{
     		writePause();
     	}
     	//Draw remainder of song
-    	if(parent.decoder.counting){
+    	if(parent.decoder.counting && parent.decoder.playing){
         	writeRemainder();
     	}
 
